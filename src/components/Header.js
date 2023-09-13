@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import useAuth from '../hooks/useAuth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
@@ -8,55 +8,17 @@ export default function Header()
 {
     const { id, username, admin, delivery } = useAuth() 
 
-    //const [userData, setUserData] = useState()
-
-    // const 
-    // { 
-    //     data: usersData,
-    //     isLoading,
-    // } = useGetCustomersQuery('customersList', 
-    // {
-    //     pollingInterval: 12000000,
-    //     refetchOnFocus: true,
-    //     refetchOnMountOrArgChange: true,
-    //     refetchOnReconnect: true
-    // })
-
-    // if(isLoading) return <p>Loading...</p>
-
-    // const { ids, }
-
-    // const[getUserData, 
-    //     {
-    //         isLoading,
-    //     }] = useGetCustomerMutation()
-
-    // const getUser = useCallback(async (id) => 
-    // {
-    //     //@ts-ignore
-    //     const { data } = await getUserData({ id }).then(data => data).finally(data => data)
-    //     setUserData(data)
-    // }, [getUserData])
-
-    // useEffect(() => 
-    // {
-    //     getUser(id)
-    // }, [id, getUser])
-
-    const
+    const { userData } = useGetCustomersQuery('customersList', 
     {
-        data: userData,
-        isLoading
-    } = useGetCustomersQuery({ id }, 
-        {
-            pollingInterval: 1200000
+        pollingInterval: 12000000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+        refetchOnReconnect: true,
+        selectFromResult: ({ data }) => 
+        ({
+            userData: data?.entities[id]
         })
-
-    if(isLoading) return <p>Loading...</p>
-
-    const entities  = userData ? userData.entities : []
-
-    const data = entities[id]
+    })
 
     async function handleCartClicked()
     {
@@ -64,8 +26,7 @@ export default function Header()
     }
 
     let cartNumber = 0
-    //@ts-ignore
-    data?.cart?.items?.forEach(item => cartNumber += item.count)
+    userData?.cart?.items?.forEach(item => cartNumber += item.count)
 
     return (
         <header>

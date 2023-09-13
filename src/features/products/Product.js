@@ -16,7 +16,7 @@ function Product({ userId, product })
         try
         {
             await addToCart({ id: userId, product: product.id, action: 'add' }).unwrap()
-            store.dispatch(customersApiSlice.util.invalidateTags([{ type: 'Customer', id: 'LIST' }]))
+            store.dispatch(customersApiSlice.util.invalidateTags([{ type: 'Customer', id: userId }]))
         }
         catch(e)
         {
