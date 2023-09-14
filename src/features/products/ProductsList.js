@@ -26,8 +26,8 @@ export default function ProductsList()
     if(isLoading) content = <ClipLoader />
     else if(isSuccess)
     {
-        const { ids, entities } = products
-        const displayedProducts = ids.map(id => <Product key={id} userId={userId} product={entities[id]} />)
+        const { ids } = products
+        const displayedProducts = ids.map(id => <Product key={id} userId={userId} product={id} />)
         content = (
             <div className='ProductsList'>
                 {displayedProducts}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import useAuth from '../hooks/useAuth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
@@ -47,10 +47,7 @@ export default function Header()
     {
         data: userData,
         isLoading
-    } = useGetCustomersQuery({ id }, 
-        {
-            pollingInterval: 1200000
-        })
+    } = useGetCustomersQuery({ id })
 
     if(isLoading) return <p>Loading...</p>
 

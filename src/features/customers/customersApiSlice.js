@@ -67,7 +67,7 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                     {
                         query: (updatedItems) => 
                         ({
-                            url: '/customers',
+                            url: `/customers/get/${updatedItems.id}`,
                             method: 'PATCH',
                             body: { ...updatedItems }
                         }),
