@@ -22,7 +22,8 @@ export default function Prefetch()
             store.dispatch(ordersApiSlice.util.prefetch('getOrders', 'OrdersList', { force: true }))
         }
         store.dispatch(categoriesApiSlice.util.prefetch('getCategories', 'categoriesList', { force: true }))
-        if(!admin && !delivery) store.dispatch(customersApiSlice.util.prefetch('getCustomers', { id }, { force: true }))
+        if(admin) store.dispatch(customersApiSlice.util.prefetch('getCustomers', 'customersList', { force: true }))
+        if(!admin && !delivery) store.dispatch(customersApiSlice.util.prefetch('getCustomer', { id }, { force: true }))
         store.dispatch(productsApiSlice.util.prefetch('getProducts', 'productsList', { force: true }))
     }, [id, admin, delivery])
     

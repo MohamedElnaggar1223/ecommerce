@@ -44,6 +44,18 @@ export const productsApiSlice = apiSlice.injectEndpoints(
                             else return [{ type: 'Product', id: 'LIST' }]
                         }
                     }),
+                getProduct: builder.query(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/products/${id}`,
+                            validateStatus: (response, result) => 
+                            {
+                                return response.status === 200 && !result.isError
+                            }
+                        }),
+                        providesTags: (result, err, args) => [{ type: 'Product', id: args.id }]
+                    }),
                 addProduct: builder.mutation(
                     {
                         query: (addedProduct) => 
@@ -80,6 +92,7 @@ export const productsApiSlice = apiSlice.injectEndpoints(
 export const 
 {
     useGetProductsQuery,
+    useGetProductQuery,
     useAddProductMutation,
     useUpdateCartMutation,
     useDeleteProductMutation

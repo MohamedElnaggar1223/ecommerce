@@ -8,7 +8,6 @@ function Product({ userId, product })
     const[addToCart, 
         {
             isLoading,
-            isSuccess
         }] = useUpdateCartMutation()
 
     const { post } = useGetProductsQuery('productsList', 
@@ -38,6 +37,7 @@ function Product({ userId, product })
             {post.price}$ 
             <button
                 onClick={handleAdd}
+                disabled={isLoading}
             >
                 Add To Cart
             </button>

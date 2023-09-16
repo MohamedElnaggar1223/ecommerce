@@ -11,9 +11,9 @@ export const customersApiSlice = apiSlice.injectEndpoints(
             {
                 getCustomers: builder.query(
                     {
-                        query: ({ id }) => 
+                        query: () => 
                         ({
-                            url: `/customers/get/${id}`,
+                            url: '/customers',
                             validateStatus: (response, result) => 
                             {
                                 return response.status === 200 && !result.isError
@@ -22,13 +22,11 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                         transformResponse: response => 
                         {
                             //@ts-ignore
-                            const loadedCustomer = 
-                                [{
-                                    //@ts-ignore
-                                    ...response,
-                                    //@ts-ignore
-                                    id : response._id
-                                }]
+                            const loadedCustomer = response.map(customer => 
+                                {
+                                    customer.id = customer._id
+                                    return customer
+                                })
                             return customersAdapter.setAll(initialState, loadedCustomer)
                         },
                         //@ts-ignore
@@ -44,15 +42,18 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                             else return [{ type: 'Customer', id: 'LIST' }]
                         }
                     }),
-                // getCustomer: builder.mutation(
-                //     {
-                //         query: ({ id }) => 
-                //         ({
-                //             url: `/customers/get/${id}`,
-                //             method: 'GET'
-                //         }),
-                //         invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }]
-                //     }),
+                getCustomer: builder.query(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/customers/get/${id}`,
+                            validateStatus: (response, result) => 
+                            {
+                                return response.status === 200 && !result.isError
+                            }
+                        }),
+                        providesTags: (result, error, arg) => [{ type: 'Customer', id: arg.id }]
+                    }),
                 addCustomer: builder.mutation(
                     {
                         query: (addedCustomer) => 
@@ -82,6 +83,15 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                             body: { id }
                         }),
                         invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }, { type: 'Order', id: 'LIST' }]
+                    }),
+                orderCompleted: builder.mutation(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/customers/success/${id}`,
+                            method: 'GET'
+                        }),
+                        invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }, { type: 'Order', id: 'LIST' }]
                     })
             })
     })
@@ -89,8 +99,9 @@ export const customersApiSlice = apiSlice.injectEndpoints(
 export const 
 {
     useGetCustomersQuery,
-    //useGetCustomerMutation,
+    useGetCustomerQuery,
     useAddCustomerMutation,
     useUpdateCartMutation,
-    useChechOutMutation
+    useChechOutMutation,
+    useOrderCompletedMutation
 } = customersApiSlice

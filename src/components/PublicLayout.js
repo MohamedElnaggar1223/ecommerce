@@ -8,7 +8,7 @@ export default function PublicLayout()
     useEffect(() => 
     {
         //@ts-ignore
-        if(JSON.parse(localStorage.getItem('loggedIn'))) navigate('/test')
+        if(JSON.parse(localStorage.getItem('loggedIn'))) navigate('/products')
         else navigate('/login')
     }, [navigate])
 
