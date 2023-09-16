@@ -132,6 +132,7 @@ export default function Test()
             {checkoutBtn}
             {ordersDisplay}
             {logoutBtn}
+            <button onClick={() => navigate('/products')}>products</button>
         </>
     )
 }

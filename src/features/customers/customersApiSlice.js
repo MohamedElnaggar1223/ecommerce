@@ -22,12 +22,12 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                         transformResponse: response => 
                         {
                             //@ts-ignore
-                            const loadedCustomers = response.map(customer => 
+                            const loadedCustomer = response.map(customer => 
                                 {
                                     customer.id = customer._id
                                     return customer
                                 })
-                            return customersAdapter.setAll(initialState, loadedCustomers)
+                            return customersAdapter.setAll(initialState, loadedCustomer)
                         },
                         //@ts-ignore
                         providesTags: (result, err, args) => 
@@ -41,6 +41,18 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                             }
                             else return [{ type: 'Customer', id: 'LIST' }]
                         }
+                    }),
+                getCustomer: builder.query(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/customers/get/${id}`,
+                            validateStatus: (response, result) => 
+                            {
+                                return response.status === 200 && !result.isError
+                            }
+                        }),
+                        providesTags: (result, error, arg) => [{ type: 'Customer', id: arg.id }]
                     }),
                 addCustomer: builder.mutation(
                     {
@@ -56,7 +68,7 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                     {
                         query: (updatedItems) => 
                         ({
-                            url: '/customers',
+                            url: `/customers/get/${updatedItems.id}`,
                             method: 'PATCH',
                             body: { ...updatedItems }
                         }),
@@ -71,6 +83,15 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                             body: { id }
                         }),
                         invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }, { type: 'Order', id: 'LIST' }]
+                    }),
+                orderCompleted: builder.mutation(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/customers/success/${id}`,
+                            method: 'GET'
+                        }),
+                        invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }, { type: 'Order', id: 'LIST' }]
                     })
             })
     })
@@ -78,7 +99,9 @@ export const customersApiSlice = apiSlice.injectEndpoints(
 export const 
 {
     useGetCustomersQuery,
+    useGetCustomerQuery,
     useAddCustomerMutation,
     useUpdateCartMutation,
-    useChechOutMutation
+    useChechOutMutation,
+    useOrderCompletedMutation
 } = customersApiSlice

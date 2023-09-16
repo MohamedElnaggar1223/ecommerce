@@ -10,6 +10,7 @@ import RenderLogin from './features/auth/RenderLogin';
 import Prefetch from './features/auth/Prefetch';
 import Signup from './features/auth/Signup';
 import ProductsList from './features/products/ProductsList';
+import OrderCompleted from './features/customers/OrderCompleted';
 
 function App() {
 	return (
@@ -30,6 +31,11 @@ function App() {
 
 						<Route path='products'>
 							<Route index element={<ProductsList />} />
+
+						</Route>
+
+						<Route path='success'>
+							<Route index element={<OrderCompleted />} />
 
 						</Route>
 					</Route>

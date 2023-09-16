@@ -1,3 +1,18 @@
+:root
+{
+	--lavender: #E6E6FA;
+	--seashell: #F7D6D0;
+}
+
+html ,body ,#root
+{
+	box-sizing: border-box;
+	margin: 0;
+	width: 100%;
+	height: 98%;
+	font-family: 'Roboto';
+}
+
 img 
 {
 	aspect-ratio: 4/3;
@@ -7,11 +22,226 @@ img
 	margin: 10px;
 }
 
+header
+{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	background: whitesmoke;
+	margin: 0;
+}
+
+.HeaderButtons
+{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 8%;
+	margin-right: 2%;
+	font-weight: 500;
+}
+
+.HeaderButtons h4
+{
+	font-weight: 400;
+	font-size: large;
+}
+
+.HeaderTitle
+{
+	margin-left: 1.5%;
+}
+
+.Cart
+{
+	display: inline-block;
+	position: relative;
+	width: fit-content; 
+	cursor: pointer;
+	position: relative;
+}
+
+.Cart .CartItems
+{
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	z-index: 1;
+	width: 16vw;
+	right: 0%;
+	background-color: whitesmoke;
+	box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.45);
+	border-radius: 1rem;
+	margin-top: 5%;
+	overflow: hidden;
+}
+
+.Cart .CartItems .CartItem
+{
+	display: flex;
+	width: auto;
+	flex-direction: row;
+	justify-content: space-between;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	flex-wrap: nowrap;
+	padding-right: 5%;
+	padding-left: 5%;
+	box-shadow: 0px 6px 8px -8px rgba(0, 0, 0, 0.6);
+	cursor: default;
+}
+
+.Cart .CartItems .CartItem img
+{
+	height: auto;
+	object-fit: contain;
+	align-self: flex-start;
+	mix-blend-mode: multiply;
+}
+
+.Cart .CartItems .CartItem .CartTitle
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	margin-right: 3%;
+	overflow-y: auto;
+}
+
+.CartItemPrice
+{
+	font-size: small;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-weight: 400;
+	width: auto;
+}
+
+.CartCheckOut
+{
+	width: 45%;
+	align-self: center;
+	justify-self: center;
+}
+
+.CartTotal
+{
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+}
+
+.CheckOutButton
+{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	outline: none;
+	border: 0;
+	box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.44);
+	background: rgb(50, 56, 64);
+	font-size: 0.90rem;
+	padding: 5%;
+	font-family: 'Roboto';
+	font-weight: 500;
+	border-radius: 0.2rem;
+	color: whitesmoke;
+	cursor: pointer;
+}
+
+.Cart .CartItems .CartItem .CartTitle .CartTitleName
+{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	height: 100%;
+}
+
+.CartMainTitle
+{
+	min-height: 75%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: static;
+}
+
+.CartAddInfo
+{
+	margin-top: auto;
+	font-size: small;
+	align-self: last baseline;
+	justify-self: baseline;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	font-weight: 400;
+}
+
+.CartAddInfo p 
+{
+	margin: 0;
+	padding: 0;
+}
+
+.CartCount
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.CartItemUpdater
+{
+	width: 100%;
+}
+
+.CartItemUpdater button
+{
+	width: 100%;
+	cursor: pointer;
+	font-weight: 500;
+	border: 0;
+	outline: none;
+	border-radius: 0.3rem;
+	border: 1px rgb(212, 206, 206) solid;
+	box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.44);
+}
+
+.CartItemRemover button
+{
+	font-weight: 500;
+	font-size: 16px;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+}
+
+.CartItemCount
+{
+	width: 100%;
+	text-align: center;
+}
+
+
 .ProductsList
 {
 	display: grid;
 	grid-template-columns: auto auto auto;
 	gap: 10% 10%;
+	width: 100%;
+	margin-right: 10%;
 }
 
 .Product:hover
@@ -19,7 +249,7 @@ img
 	cursor: pointer;
 }
 
-.CartItems 
+.CartNumber
 {
 	position: absolute;
 	top: -10px;
@@ -28,6 +258,87 @@ img
 	border-radius: 50%;
 	background-color: rgb(62, 63, 69);
 	color: white;
-	font-family: 'Poppins';
+	font-family: 'Roboto';
 	font-size: smaller;
+}
+
+.ProductsContainer
+{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 97%;
+}
+
+.ProductsFiltersContainer
+{
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	width: 10%;
+}
+
+.ProductsFilterButton
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+
+.ProductsFilterButton button
+{
+	position: absolute;
+	background: white;
+	border-radius: 2rem;
+	font-size: x-large;
+	margin-left: 10px;
+	border: white solid;
+	z-index: 1;
+	cursor: pointer;
+	outline: none;
+}
+
+.ProductsFilters
+{
+	position: relative;
+	width: 10%;
+	background: var(--lavender);
+	overflow: hidden;
+	transition: 0.5s;
+	box-shadow: 0px 2px 12px -6px rgba(0, 0, 0, 1);
+	border-radius: 0.15rem;
+}
+
+.ProductsFilters.after
+{
+	width: fit-content;
+}
+
+.CategoriesMenu
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	padding: 10%;
+	position: relative;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.CategoriesList
+{
+	display: flex;
+	position: relative;
+	justify-content: space-around;
+	flex-direction: column;
+	align-items: center;
+	overflow: hidden;
+}
+
+.Category
+{
+	display: flex;
+	position: relative;
 }
