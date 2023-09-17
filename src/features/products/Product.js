@@ -1,21 +1,23 @@
 import React, { memo } from 'react'
-import { useGetProductsQuery, useUpdateCartMutation } from './productsApiSlice'
+import { useGetProductQuery, useGetProductsQuery, useUpdateCartMutation } from './productsApiSlice'
 import { store } from '../../app/store'
 import { customersApiSlice } from '../customers/customersApiSlice'
+import ClipLoader from 'react-spinners/ClipLoader'
 
-function Product({ userId, product }) 
+function Product({ userId, product, selectedCategories }) 
 {
     const[addToCart, 
         {
             isLoading,
         }] = useUpdateCartMutation()
 
-    const { post } = useGetProductsQuery('productsList', 
+    const
     {
-        selectFromResult: ({ data }) => ({
-            post: data?.entities[product]
-        })
-    })
+        data: post,
+        isLoading: postIsLoading
+    } = useGetProductQuery({ id: product })
+
+    if(postIsLoading) return <ClipLoader />
 
     async function handleAdd()
     {
