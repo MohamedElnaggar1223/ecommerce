@@ -42,6 +42,18 @@ export const categoriesApiSlice = apiSlice.injectEndpoints(
                             else return [{ type: 'Category', id: 'LIST' }]
                         }
                     }),
+                getCategory: builder.query(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/category/${id}`,
+                            validateStatus: (response, result) => 
+                            {
+                                return response.status === 200 && !result.isError
+                            }
+                        }),
+                        providesTags: (result, err, args) => [{ type: 'Category', id: args.id }]
+                    }),
                 addCategory: builder.mutation(
                     {
                         query: (addedCategory) => 
@@ -58,5 +70,6 @@ export const categoriesApiSlice = apiSlice.injectEndpoints(
 export const
 {
     useGetCategoriesQuery,
+    useGetCategoryQuery,
     useAddCategoryMutation
 } = categoriesApiSlice

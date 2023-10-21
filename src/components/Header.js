@@ -70,7 +70,7 @@ export default function Header()
                 <h1>NJ Shop</h1>
             </div>
             <div className='HeaderButtons'>
-                {username && <h4>Hello, {username}!</h4>}
+                {username && <div className='HeadersName'>Hello, {username}!</div>}
                 {!admin && !delivery && 
                     <div 
                         className='Cart' 

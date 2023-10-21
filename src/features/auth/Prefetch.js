@@ -25,7 +25,7 @@ export default function Prefetch()
         if(admin) store.dispatch(customersApiSlice.util.prefetch('getCustomers', 'customersList', { force: true }))
         if(!admin && !delivery) store.dispatch(customersApiSlice.util.prefetch('getCustomer', { id }, { force: true }))
         store.dispatch(productsApiSlice.util.prefetch('getProducts', 'productsList', { force: true }))
-    }, [admin, delivery])
+    }, [id, admin, delivery])
     
     return <Outlet />
 }
