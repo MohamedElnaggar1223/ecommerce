@@ -11,14 +11,6 @@ function Product({ userId, product, selectedCategories })
             isLoading,
         }] = useUpdateCartMutation()
 
-    const
-    {
-        data: post,
-        isLoading: postIsLoading
-    } = useGetProductQuery({ id: product })
-
-    if(postIsLoading) return <ClipLoader />
-
     async function handleAdd()
     {
         try
@@ -34,9 +26,9 @@ function Product({ userId, product, selectedCategories })
 
     return (
         <div className='Product'>
-            <img src={post.image} alt={post.title} />
-            {post.title} 
-            {post.price}$ 
+            <img src={product.image} alt={product.title} />
+            {product.title} 
+            {product.price}$ 
             <button
                 onClick={handleAdd}
                 disabled={isLoading}

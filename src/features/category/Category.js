@@ -33,8 +33,8 @@ function Category({ userId, category, select })
 
     return (
         <div className='Category'>
-            <input onChange={addCategory} type='checkbox' value={categoryData._id} />
-            <div>{categoryData.category}</div>
+            <input onChange={addCategory} type='checkbox' value={categoryData?._id} />
+            <div>{categoryData?.category}</div>
         </div>
     )
 }

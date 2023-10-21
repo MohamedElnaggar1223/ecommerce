@@ -59,7 +59,7 @@ export default function ProductsList()
                         return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={id} />
                     }
                 }
-                else return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={id} />
+                else return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={entities[id]} />
             })
         const displayedCategories = catsIds.map(id => <Category key={id} userId={userId} category={id} select={setSelectedCategories} />)
         //console.log(selectedCategories)
