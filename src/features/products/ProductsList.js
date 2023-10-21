@@ -57,6 +57,7 @@ export default function ProductsList()
                     <motion.div className='ProductsFilterButton'>
                         <button
                             onClick={() => setFilter(prev => !prev)}
+                            name='menu'
                         >
                             <FontAwesomeIcon icon={filter ? faAngleDown : faAngleUp } rotation={90} />
                         </button>

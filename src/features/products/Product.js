@@ -38,6 +38,7 @@ function Product({ userId, product })
             <button
                 onClick={handleAdd}
                 disabled={isLoading}
+                name='addToCart'
             >
                 Add To Cart
             </button>

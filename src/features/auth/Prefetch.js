@@ -11,7 +11,7 @@ import { productsApiSlice } from '../products/productsApiSlice'
 
 export default function Prefetch() 
 {
-    const { admin, delivery } = useAuth()
+    const { id, admin, delivery } = useAuth()
 
     useEffect(() => 
     {
@@ -22,12 +22,8 @@ export default function Prefetch()
             store.dispatch(ordersApiSlice.util.prefetch('getOrders', 'OrdersList', { force: true }))
         }
         store.dispatch(categoriesApiSlice.util.prefetch('getCategories', 'categoriesList', { force: true }))
-<<<<<<< HEAD
-        store.dispatch(customersApiSlice.util.prefetch('getCustomers', 'customersList', { force: true }))
-=======
         if(admin) store.dispatch(customersApiSlice.util.prefetch('getCustomers', 'customersList', { force: true }))
         if(!admin && !delivery) store.dispatch(customersApiSlice.util.prefetch('getCustomer', { id }, { force: true }))
->>>>>>> my-temporary-work
         store.dispatch(productsApiSlice.util.prefetch('getProducts', 'productsList', { force: true }))
     }, [admin, delivery])
     
