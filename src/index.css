@@ -365,6 +365,16 @@ header
 	align-self: center;
 	height: 100%;
 	margin-top: 20%;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-direction: column;
+
+	& span
+	{
+		margin-top: 5%;
+		margin-bottom: 5%;
+		margin-left: 2.5%;
+	}
 }
 
 .HeadersName

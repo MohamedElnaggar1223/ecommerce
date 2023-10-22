@@ -52,7 +52,7 @@ export default function Header()
 
     const cartTotal = (
         <div className='CartItem'>
-            <div className='CartTotal'>Total: {userData?.cart?.total.toFixed(2)}$</div>
+            <div className='CartTotal'>Total: ${userData?.cart?.total.toFixed(2)}</div>
             <div className='CartCheckOut'>
                 <button 
                     className='CheckOutButton'

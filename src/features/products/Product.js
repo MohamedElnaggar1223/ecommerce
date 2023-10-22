@@ -27,8 +27,8 @@ function Product({ userId, product, selectedCategories })
     return (
         <div className='Product'>
             <img src={product.image} alt={product.title} />
-            {product.title} 
-            {product.price}$ 
+            {product.title} {' '}
+            ${product.price}
             <button
                 onClick={handleAdd}
                 disabled={isLoading}

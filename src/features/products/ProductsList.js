@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGetProductsQuery } from './productsApiSlice'
 import Product from './Product'
 import ClipLoader from 'react-spinners/ClipLoader'
@@ -15,6 +15,12 @@ export default function ProductsList()
     const [filter, setFilter] = useState(false)
     const [categories, setCategories] = useState(false)
     const [selectedCategories, setSelectedCategories] = useState([])
+    const [selectedProducts, setSelectedProducts] = useState([])
+
+    const [minPrice, setMinPrice] = useState(0)
+    const [price, setPrice] = useState(minPrice)
+    const [maxPrice, setMaxPrice] = useState(0)
+
     const 
     {
         data: products,
@@ -43,12 +49,63 @@ export default function ProductsList()
         refetchOnReconnect: true
     })
 
+    useEffect(() => 
+    {
+        let min = 99999999999
+        let max = 0
+        selectedProducts.forEach(prod => 
+        {
+            //@ts-ignore
+            if(Math.floor(prod.price) > max) max = Math.floor(prod.price)
+            //@ts-ignore
+            if(Math.floor(prod.price) < min) min = Math.floor(prod.price)
+
+            //@ts-ignore
+            console.log(prod.price)
+        })
+        setMaxPrice(max)
+        setMinPrice(min)
+        setPrice(min)
+    }, [selectedProducts])
+
+    // useEffect(() => 
+    // {
+    //     if(isSuccess)
+    //     {
+    //         const { ids: catsIds } = cats
+    //         setSelectedCategories(catsIds)
+    //     }
+    // }, [isSuccess, cats])
+
+    useEffect(() => 
+    {
+        if(products?.ids && products?.entities)
+        {
+            const { ids, entities } = products
+
+            if(selectedCategories.length !== 0)
+            {
+                //@ts-ignore
+                const array = ids.filter(id => selectedCategories.includes(entities[id].category))
+                const filteredArray = array.map(id => entities[id])
+                setSelectedProducts(filteredArray)
+            }
+            else
+            {
+                const array = ids.map(id => entities[id])
+                setSelectedProducts(array)
+            }
+        }
+        
+    }, [selectedCategories, products])
+
     let content
     if(isLoading || isLoadingCats) content = <ClipLoader />
     else if(isSuccess && isSuccessCats)
     {
         const { ids, entities } = products
         const { ids: catsIds } = cats
+
         const displayedProducts = ids.map(id => 
             {
                 if(selectedCategories.length !== 0)
@@ -56,10 +113,13 @@ export default function ProductsList()
                     //@ts-ignore
                     if (selectedCategories.includes(entities[id].category)) 
                     {
-                        return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={id} />
+                        return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={entities[id]} />
                     }
                 }
-                else return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={entities[id]} />
+                else 
+                {
+                    return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={entities[id]} />
+                }
             })
         const displayedCategories = catsIds.map(id => <Category key={id} userId={userId} category={id} select={setSelectedCategories} />)
         //console.log(selectedCategories)
@@ -81,7 +141,10 @@ export default function ProductsList()
                             </div>
                         }
                         { filter &&
-                            <motion.div className='PriceFilterContainer'>Price</motion.div>
+                            <motion.div className='PriceFilterContainer'>
+                                <label>Price: ${price}</label>
+                                <input type='range' min={minPrice} max={maxPrice} value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+                            </motion.div>
                         }
                     </motion.div>
                     <motion.div className='ProductsFilterButton'>

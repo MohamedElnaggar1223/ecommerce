@@ -75,7 +75,7 @@ function CartItem({ product })
             <div className='CartItemRemover'>
                 <button disabled={CartLoading} onClick={handleDel} ><FontAwesomeIcon icon={faCircleXmark} /></button>
             </div>
-                <div className='CartItemPrice'>USD {productData.price * product.count}$</div>
+                <div className='CartItemPrice'>USD$ {productData.price * product.count}</div>
                 <img src={productData.image} alt={productData._id}/>
                 <div className='CartTitleName'>
                     <div className='CartMainTitle'>{productData.title}</div>
