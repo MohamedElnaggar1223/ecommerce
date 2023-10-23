@@ -59,23 +59,11 @@ export default function ProductsList()
             if(Math.floor(prod.price) > max) max = Math.floor(prod.price)
             //@ts-ignore
             if(Math.floor(prod.price) < min) min = Math.floor(prod.price)
-
-            //@ts-ignore
-            console.log(prod.price)
         })
         setMaxPrice(max)
         setMinPrice(min)
         setPrice(min)
     }, [selectedProducts])
-
-    // useEffect(() => 
-    // {
-    //     if(isSuccess)
-    //     {
-    //         const { ids: catsIds } = cats
-    //         setSelectedCategories(catsIds)
-    //     }
-    // }, [isSuccess, cats])
 
     useEffect(() => 
     {
@@ -92,12 +80,14 @@ export default function ProductsList()
             }
             else
             {
-                const array = ids.map(id => entities[id])
+                const array = ids?.map(id => entities[id])
                 setSelectedProducts(array)
             }
         }
         
     }, [selectedCategories, products])
+
+    console.log(selectedProducts)
 
     let content
     if(isLoading || isLoadingCats) content = <ClipLoader />
