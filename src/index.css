@@ -9,8 +9,10 @@ html ,body ,#root
 	box-sizing: border-box;
 	margin: 0;
 	width: 100%;
-	height: 98%;
+	height: 100%;
 	font-family: 'Roboto';
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 
 img 
@@ -29,8 +31,12 @@ header
 	width: 100%;
 	justify-content: space-between;
 	align-items: center;
-	background: whitesmoke;
+	background: #232023;
 	margin: 0;
+	height: 11.3%;
+	box-shadow: 0px 4px 12px 4px rgba(0, 0, 0, 0.25);
+	z-index: 2;
+	position: relative;
 }
 
 .HeaderButtons
@@ -39,7 +45,7 @@ header
 	justify-content: space-around;
 	align-items: center;
 	width: 8%;
-	margin-right: 2%;
+	margin-right: 2.6%;
 	font-weight: 500;
 }
 
@@ -51,7 +57,32 @@ header
 
 .HeaderTitle
 {
-	margin-left: 1.5%;
+	margin-left: 2.6%;
+}
+
+.HeaderTitle h1
+{
+	color: #FFFEFC;
+	text-align: center;
+	font-family: Poppins;
+	font-size: 1.9vw;
+	font-style: normal;
+	font-weight: 300;
+	line-height: normal;
+}
+
+.HeadersName
+{
+	color: #FFF;
+	text-align: center;
+	font-family: Poppins;
+	font-style: normal;
+	font-weight: 300;
+	line-height: normal;
+	font-size: larger;
+	text-wrap: nowrap;
+	width: auto;
+	margin-right: 10%;
 }
 
 .Cart
@@ -61,6 +92,13 @@ header
 	width: fit-content; 
 	cursor: pointer;
 	position: relative;
+}
+
+.Cart svg
+{
+	width: 1.7vw;
+	height: 1.7vw;
+	flex-shrink: 0;
 }
 
 .Cart .CartItems
@@ -235,13 +273,13 @@ header
 }
 
 
-.ProductsList
+/* .ProductsList
 {
 	display: grid;
 	grid-template-columns: auto auto auto;
 	gap: 10% 10%;
 	margin-right: 10%;
-}
+} */
 
 .Product:hover
 {
@@ -261,7 +299,7 @@ header
 	font-size: smaller;
 }
 
-.ProductsContainer
+/* .ProductsContainer
 {
 	display: flex;
 	flex-direction: row;
@@ -331,8 +369,8 @@ header
 	flex-direction: column;
 	align-items: center;
 	overflow: hidden;
-	/* border-bottom: whitesmoke solid;
-	box-shadow: 0px 2px 6px -6px rgba(0, 0, 0, 1); */
+	border-bottom: whitesmoke solid;
+	box-shadow: 0px 2px 6px -6px rgba(0, 0, 0, 1); 
 }
 
 .Category
@@ -375,12 +413,126 @@ header
 		margin-bottom: 5%;
 		margin-left: 2.5%;
 	}
+} */
+
+.MainContainer
+{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
 }
 
-.HeadersName
+.SideMenuContainer
 {
-	font-size: larger;
+	width: 22%;
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	background: #F8EEEC;
+	z-index: 1;
+}
+
+.CategoriesContainer
+{
+	display: flex;
+	margin: 10%;
+	margin-bottom: 15%;
+	flex-direction: column;
+	height: 55%;
+	justify-content: space-around;
+}
+
+.Category
+{
+	color: #000;
+	font-family: Poppins;
+	font-size: 1.1vw;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: center;
+	transition: all 0.5s;
+}
+
+.Category:hover
+{
+	cursor: pointer;
+}
+
+.CategoryName
+{
+	width: 70%;
+	text-align: left;
+	display: flex;
 	text-wrap: nowrap;
-	width: auto;
+	justify-content: flex-start;
+	align-items: center;
+	margin-left: 10%;
+	margin-bottom: 3%;
+	font-weight: 400;
+	transition: all 0.5s;
+}
+
+.CategoryIcon
+{
+	width: 15%;
+	transition: all 0.5s;
+}
+
+.CategoryIcon svg
+{
+	min-width: 100%;
+	object-fit: fill;
+	transition: all 0.5s;
+}
+
+.PriceContainer
+{
+	display: flex;
+	flex-direction: column;
+	height: 10%;
+	margin-left: 10%;
 	margin-right: 10%;
+}
+
+.PriceContainer label
+{
+	color: #000;
+	font-family: Poppins;
+	font-size:  1.05vw;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin-bottom: 6%;
+}
+
+.PriceContainer input
+{
+	margin-left: 4.5%;
+	margin-right: 10%;
+	-webkit-appearance: none;  /* Override default CSS styles */
+	appearance: none;
+	height: 0.2vw; /* Specified height */
+	background: #000; /* Grey background */
+	outline: none; /* Remove outline */
+}
+
+.PriceContainer input::-webkit-slider-thumb
+{
+	background: #000;
+	-webkit-appearance: none;
+  	appearance: none;
+	color: #000;
+	width: 0.7vw;
+	height: 0.7vw;
+	border-radius: 100%;
+}
+
+.PriceContainer input::-moz-range-thumb
+{
+	background: #000;
 }
