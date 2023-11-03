@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useGetProductsQuery } from './productsApiSlice'
 import Product from './Product'
+import OutofStockProd from './OutofStockProd'
 import ClipLoader from 'react-spinners/ClipLoader'
 import useAuth from '../../hooks/useAuth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { motion } from 'framer-motion'
 import { useGetCategoriesQuery } from '../category/categoryApiSlice'
 import Category from '../category/Category'
@@ -13,6 +14,8 @@ export default function ProductsList()
 {
     const { id: userId } = useAuth()
     const [categories, setCategories] = useState(false)
+    const [showStock, setShowStock] = useState(true)
+    const [sort, setSort] = useState('')
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedProducts, setSelectedProducts] = useState([])
 
@@ -110,17 +113,49 @@ export default function ProductsList()
         const filteredArray = array.filter(prod => parseInt(prod.price) <= price)
         if(selectedCategories.length !== 0)
         {
+            setShowStock(true)
             //@ts-ignore
             const finalArray = filteredArray.filter(prod => selectedCategories?.includes(prod.category))
+            if(sort === 'Newest') finalArray.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+            else if(sort === 'Oldest') finalArray.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+            else if(sort === 'HighestPrice') finalArray.sort((a, b) => b.price === a.price ? 0 : b.price > a.price ? 1 : -1)
+            else if(sort === 'LowestPrice') finalArray.sort((a, b) => a.price === b.price ? 0 : a.price > b.price ? 1 : -1)
+            else if(sort === 'AtoZ') finalArray.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
+            else if(sort === 'ZtoA') finalArray.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
+            else if(sort === 'InStock') setShowStock(false)
             //@ts-ignore
             setSelectedProducts(finalArray)
         }
         else
         {
+            setShowStock(true)
+            if(sort === 'Newest') filteredArray.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+            else if(sort === 'Oldest') filteredArray.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+            else if(sort === 'HighestPrice') filteredArray.sort((a, b) => b.price === a.price ? 0 : b.price > a.price ? 1 : -1)
+            else if(sort === 'LowestPrice') filteredArray.sort((a, b) => a.price === b.price ? 0 : a.price > b.price ? 1 : -1)
+            else if(sort === 'AtoZ') filteredArray.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
+            else if(sort === 'ZtoA') filteredArray.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
+            else if(sort === 'InStock') setShowStock(false)
             //@ts-ignore
             setSelectedProducts(filteredArray)
         }
-    }, [price, products, selectedCategories])
+    }, [price, products, selectedCategories, sort])
+
+    function handleSort(e)
+    {
+        setSort(e.target.value)
+        setShowStock(true)
+        const array = [...selectedProducts]
+        if(e.target.value === 'Newest') array.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        else if(e.target.value === 'Oldest') array.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+        else if(e.target.value === 'HighestPrice') array.sort((a, b) => b.price === a.price ? 0 : b.price > a.price ? 1 : -1)
+        else if(e.target.value === 'LowestPrice') array.sort((a, b) => a.price === b.price ? 0 : a.price > b.price ? 1 : -1)
+        else if(e.target.value === 'AtoZ') array.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
+        else if(e.target.value === 'ZtoA') array.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
+        else if(e.target.value === 'InStock') setShowStock(false)
+        //@ts-ignore
+        setSelectedProducts(array)
+    }
 
     let content
     if(isLoading || isLoadingCats) content = <ClipLoader />
@@ -129,52 +164,20 @@ export default function ProductsList()
         const { entities } = products
         const { ids: catsIds } = cats
 
-        // const displayedProducts = ids.map(id => 
-        //     {
-        //         if(selectedCategories.length !== 0)
-        //         {
-        //             //@ts-ignore
-        //             if (selectedCategories.includes(entities[id].category)) 
-        //             {
-        //                 return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={entities[id]} />
-        //             }
-        //         }
-        //         else 
-        //         {
-        //             return <Product key={id} selectedCategories={selectedCategories} userId={userId} product={entities[id]} />
-        //         }
-        //     })
-
-        //@ts-ignore
-        const displayedProducts = selectedProducts.map(prod => <Product key={prod._id} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />)
+        const displayedProducts = selectedProducts.map(prod =>
+            //@ts-ignore 
+            prod.available 
+            ?
+                //@ts-ignore
+                <Product key={prod._id} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
+            :
+                //@ts-ignore
+                showStock && <OutofStockProd key={prod._id} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
+        )
 
         const displayedCategories = catsIds.map(id => <Category key={id} userId={userId} category={id} select={setSelectedCategories} />)
-        //console.log(selectedCategories)
+
         content = (
-            // <div className='ProductsContainer'>
-            //     <div className='ProductsFiltersContainer'>
-            //         <div className={'ProductsFilters'} >
-            //                 <div className='Categories'>
-            //                     <div 
-            //                         onClick={() => setCategories(prev => !prev)} 
-            //                         className='CategoriesMenu'
-            //                     >
-            //                             Categories <FontAwesomeIcon icon={categories ? faAngleDown : faAngleUp } rotation={180} />
-            //                     </div>
-            //                     <motion.div transition={{ duration: '0.5' }} animate={categories ? {height: ['0vh', `${catsIds.length * 5}vh`]} : {height: [`${catsIds.length * 5}vh`, '0vh']}} className='CategoriesList'>
-            //                         {displayedCategories}
-            //                     </motion.div>
-            //                 </div>
-            //                 <motion.div className='PriceFilterContainer'>
-            //                     <label>Price: ${price}</label>
-            //                     <input type='range' min={minPrice} max={maxPrice} value={price} onChange={(e) => setPrice(parseInt(e.target.value))} onMouseUp={handlePriceChange} />
-            //                 </motion.div>
-            //         </div>
-            //     </div>
-
-            //     {displayedProducts}
-            // </div>
-
             <div className='MainContainer'>
                 <div className='SideMenuContainer'>
                     <div className='CategoriesContainer'>
@@ -186,7 +189,21 @@ export default function ProductsList()
                     </div>
                 </div>
                 <div className='ProductsContainer'>
-                    {displayedProducts}
+                    <div className='SortByContainer'>
+                        <label htmlFor='Sort'>Sort By:</label>
+                        <select id='Sort' onChange={handleSort}>
+                            <option className='SortChild' value='Newest'>Newest</option>
+                            <option className='SortChild' value='Oldest'>Oldest</option>
+                            <option className='SortChild' value='HighestPrice'>Highest Price</option>
+                            <option className='SortChild' value='LowestPrice'>Lowest Price</option>
+                            <option className='SortChild' value='AtoZ'>A ~ Z</option>
+                            <option className='SortChild' value='ZtoA'>Z ~ A</option>
+                            <option className='SortChild' value='InStock'>In Stock</option>
+                        </select>
+                    </div>
+                    <div className='Products'>
+                        {displayedProducts}
+                    </div>
                 </div>
             </div>
         )
