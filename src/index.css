@@ -99,7 +99,7 @@ header
 	flex-direction: column;
 	position: absolute;
 	z-index: 1;
-	width: 16vw;
+	width: 20vw;
 	right: 0%;
 	background-color: whitesmoke;
 	box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.45);
@@ -129,6 +129,9 @@ header
 	object-fit: contain;
 	align-self: flex-start;
 	mix-blend-mode: multiply;
+	width: 15%;
+	margin-left: 5%;
+	margin-right: 5%;
 }
 
 .Cart .CartItems .CartItem .CartTitle
@@ -139,6 +142,7 @@ header
 	align-items: center;
 	margin-right: 3%;
 	overflow-y: auto;
+	text-wrap: nowrap;
 }
 
 .CartItemPrice
@@ -727,20 +731,30 @@ header
 	}
 }
 
-.SingleProductInfo
+.SingleProductInfoAndButton
 {
 	width: 60%;
-	height: 90%;
+	height: 85%;
 	display: flex;
 	flex-direction: column;
 	margin-top: 5%;
+	margin-bottom: 5%;
 	margin-left: 2.5%;
 	margin-right: 4%;
+	justify-content: space-between;
+}
+
+.SingleProduct
+{
+	width: 50%;
 }
 
 .ExitSingleProduct
 {
 	position: absolute;
+	top: 2%;
+	left: 96%;
+	cursor: pointer;
 }
 
 .SingleProductTitle
@@ -809,9 +823,14 @@ header
 	font-weight: 500;
 	line-height: normal;
 	border: 0px;
-	border-radius: 1rem;
+	border-radius: 0.5rem;
 	background: #F8EEEC;
 	box-shadow: 0px 6px 16px 4px rgba(0, 0, 0, 0.25);
 	width: 35%;
 	height: 100%;
+}
+
+.SingleProductAddButton button:hover
+{
+	cursor: pointer;
 }
