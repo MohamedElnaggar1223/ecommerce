@@ -36,7 +36,7 @@ header
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	width: 8%;
+	width: fit-content;
 	margin-right: 2.6%;
 	font-weight: 500;
 }
@@ -57,7 +57,7 @@ header
 	color: #FFFEFC;
 	text-align: center;
 	font-family: Poppins;
-	font-size: 1.9vw;
+	font-size: 32px;
 	font-style: normal;
 	font-weight: 300;
 	line-height: normal;
@@ -88,8 +88,8 @@ header
 
 .Cart svg
 {
-	width: 1.7vw;
-	height: 1.7vw;
+	width: 28px;
+	height: 28px;
 	flex-shrink: 0;
 }
 

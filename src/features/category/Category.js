@@ -3,6 +3,7 @@ import { useGetCategoryQuery } from './categoryApiSlice'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Icons } from '../../components/Icons'
+import { Stack, Typography } from '@mui/material'
 
 function Category({ userId, category, select }) 
 {
@@ -38,15 +39,24 @@ function Category({ userId, category, select })
     }
 
     return (
-        <div onClick={addCategory} className='Category'>
-            {clicked && <FontAwesomeIcon style={{ transition: 'all 0.5s', width: '5%', justifySelf: 'center', alignSelf: 'center', marginBottom: '4%', marginRight: '4%' }} icon={faXmark} />}
-            <div className='CategoryIcon'>
-                {Icons[categoryData?.category]}
-            </div>
-            <div className='CategoryName'>
+        <Stack
+            direction='row'
+            gap={2.5}
+            alignItems='center'
+            height= 'fit-content'
+            flex={1}
+        >
+            {Icons[categoryData?.category]}
+            <Typography
+                fontSize={20}
+                fontWeight={500}
+                fontFamily='Poppins'
+                textAlign='left'
+                noWrap
+            >
                 {categoryData?.category}
-            </div>
-        </div>
+            </Typography>
+        </Stack>
     )
 }
 

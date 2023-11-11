@@ -4,11 +4,9 @@ import Product from './Product'
 import OutofStockProd from './OutofStockProd'
 import ClipLoader from 'react-spinners/ClipLoader'
 import useAuth from '../../hooks/useAuth'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { motion } from 'framer-motion'
 import { useGetCategoriesQuery } from '../category/categoryApiSlice'
 import Category from '../category/Category'
+import { Box, Slider, Stack, Typography } from '@mui/material'
 
 export default function ProductsList() 
 {
@@ -176,36 +174,68 @@ export default function ProductsList()
         )
 
         const displayedCategories = catsIds.map(id => <Category key={id} userId={userId} category={id} select={setSelectedCategories} />)
-
+        
         content = (
-            <div className='MainContainer'>
-                <div className='SideMenuContainer'>
-                    <div className='CategoriesContainer'>
+            <Box
+                width='100%'
+                height='100%'
+                bgcolor='#FBFAF2'
+                display='flex'
+                flexDirection='row'
+            >
+                <Box
+                    width='fit-content'
+                    bgcolor='#F8EEEC'
+                    height='100%'
+                    // maxHeight= '100%'
+                    display='flex'
+                    flexDirection='column'
+                    padding={3}
+                    justifyContent='space-evenly'
+                    gap={4}
+                >
+                    <Stack
+                        direction='column'
+                        mt={2}
+                        mb={1}
+                        flex={1}
+                        gap={3}
+                    >
                         {displayedCategories}
-                    </div>
-                    <div className='PriceContainer'>
-                        <label>Price: ${price}</label>
-                        <input type='range' min={minPrice} max={maxPrice} value={price} onChange={(e) => setPrice(parseInt(e.target.value))} onMouseUp={handlePriceChange} />
-                    </div>
-                </div>
-                <div className='ProductsContainer'>
-                    <div className='SortByContainer'>
-                        <label htmlFor='Sort'>Sort By:</label>
-                        <select id='Sort' onChange={handleSort}>
-                            <option className='SortChild' value='Newest'>Newest</option>
-                            <option className='SortChild' value='Oldest'>Oldest</option>
-                            <option className='SortChild' value='HighestPrice'>Highest Price</option>
-                            <option className='SortChild' value='LowestPrice'>Lowest Price</option>
-                            <option className='SortChild' value='AtoZ'>A ~ Z</option>
-                            <option className='SortChild' value='ZtoA'>Z ~ A</option>
-                            <option className='SortChild' value='InStock'>In Stock</option>
-                        </select>
-                    </div>
-                    <div className='Products'>
+                    </Stack>
+                    <Stack
+                        alignItems='center'
+                        flex={1}
+                    >
+                        <Typography
+                            sx={{
+                                fontWeight: 500,
+                                margin: "10px 0",
+                                fontSize: 20,
+                                color: "#11142d",
+                                marginLeft: 1,
+                                fontFamily: 'Poppins',
+                                alignSelf: 'flex-start'
+                            }}
+                        >
+                            Price: ${price}
+                        </Typography>
+                        {/*//@ts-ignore*/}
+                        <Slider onChange={(e) => setPrice(parseInt(e.target.value))} onMouseUp={handlePriceChange} sx={{ color: '#000000', width: '80%' }}  max={maxPrice} min={minPrice} size='small' defaultValue={maxPrice} />
+                    </Stack>
+                </Box>
+                <Box>
+                    <Stack
+                        direction='row'
+                        flexWrap='wrap'
+                        gap={12}
+                        mx={16}
+                        my={10}
+                    >
                         {displayedProducts}
-                    </div>
-                </div>
-            </div>
+                    </Stack>
+                </Box>
+            </Box>
         )
     }
     //@ts-ignore
