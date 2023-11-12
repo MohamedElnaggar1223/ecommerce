@@ -16,6 +16,8 @@ export default function ProductsList()
     const [sort, setSort] = useState('')
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedProducts, setSelectedProducts] = useState([])
+    const [productClicked, setProductClicked] = useState({ id: null })
+    const [viewedProduct, setViewedProduct] = useState()
 
     const [minPrice, setMinPrice] = useState(0)
     const [price, setPrice] = useState(minPrice)
@@ -155,6 +157,15 @@ export default function ProductsList()
         setSelectedProducts(array)
     }
 
+    useEffect(() => 
+        {
+            if(productClicked.id !== null) 
+            {
+                const prod = selectedProducts.find(prod => prod.id === productClicked.id)
+                setViewedProduct(prod)
+            }
+        }, [productClicked])
+
     let content
     if(isLoading || isLoadingCats) content = <ClipLoader />
     else if(isSuccess && isSuccessCats)
@@ -167,17 +178,18 @@ export default function ProductsList()
             prod.available 
             ?
                 //@ts-ignore
-                <Product key={prod._id} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
+                <Product key={prod._id} setProductClicked={setProductClicked} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
             :
                 //@ts-ignore
                 showStock && <OutofStockProd key={prod._id} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
         )
 
         const displayedCategories = catsIds.map(id => <Category key={id} userId={userId} category={id} select={setSelectedCategories} />)
-        
+
         content = (
             <Box
                 width='100%'
+                minHeight='100%'
                 height='100%'
                 bgcolor='#FBFAF2'
                 display='flex'
@@ -187,7 +199,6 @@ export default function ProductsList()
                     width='fit-content'
                     bgcolor='#F8EEEC'
                     height='100%'
-                    // maxHeight= '100%'
                     display='flex'
                     flexDirection='column'
                     padding={3}
@@ -224,17 +235,87 @@ export default function ProductsList()
                         <Slider onChange={(e) => setPrice(parseInt(e.target.value))} onMouseUp={handlePriceChange} sx={{ color: '#000000', width: '80%' }}  max={maxPrice} min={minPrice} size='small' defaultValue={maxPrice} />
                     </Stack>
                 </Box>
-                <Box>
+                <Box
+                    overflow='auto'
+                    height='auto'
+                    paddingBottom={14}
+                >
                     <Stack
                         direction='row'
                         flexWrap='wrap'
-                        gap={12}
+                        gap={16}
                         mx={16}
                         my={10}
+                        justifyContent={{xs: 'center', md: 'flex-start'}}
                     >
                         {displayedProducts}
                     </Stack>
                 </Box>
+                {
+                    productClicked.id !== null && 
+                    <Box
+                        position='absolute'
+                        width='50vw'
+                        borderRadius= '20px'
+                        bgcolor= '#FBFCFA'
+                        boxShadow='0px 0px 100vw 100vw rgba(175, 175, 175, 0.6)'
+                        minHeight='35vh'
+                        top='25%'
+                        left='25%'
+                        display='flex'
+                        padding={1}
+                        paddingLeft={5}
+                        flexWrap='wrap'
+                    >
+                        <img style={{ alignSelf: 'center' }} src={viewedProduct?.image} alt='imag' />
+                        <Stack
+                            direction='column'
+                            marginLeft={6}
+                            my={6}
+                            paddingTop={{ xs: '' }}
+                        >
+                            <Typography
+                                fontSize={34}
+                                fontWeight={600}
+                                fontFamily='Poppins'
+                            >
+                                {viewedProduct?.title}
+                            </Typography>
+                            <Typography
+                                fontSize={14}
+                                fontWeight={400}
+                                fontFamily='Poppins'
+                                height={320}
+                            >
+                                {viewedProduct?.description}
+                            </Typography>
+                            <Typography
+                                fontSize={14}
+                                fontWeight={400}
+                                fontFamily='Poppins'
+                            >
+                                {viewedProduct?.additionalInfo && Object.keys(viewedProduct?.additionalInfo).map(info => (
+                                    <Stack
+                                        direction='row'
+                                    >
+                                        <Typography
+                                            fontWeight={600}
+                                            fontSize={16}
+                                        >
+                                            {info}:
+                                        </Typography>
+                                        <Typography
+                                            fontSize={16}
+                                            marginLeft={1}
+                                        >
+                                            {viewedProduct?.additionalInfo[info]}
+                                        </Typography>
+                                    </Stack>
+                                ))}
+                            </Typography>
+                        </Stack>
+                    </Box>
+                }
             </Box>
         )
     }

@@ -4,6 +4,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Icons } from '../../components/Icons'
 import { Stack, Typography } from '@mui/material'
+import ClearIcon from '@mui/icons-material/Clear';
 
 function Category({ userId, category, select }) 
 {
@@ -45,7 +46,12 @@ function Category({ userId, category, select })
             alignItems='center'
             height= 'fit-content'
             flex={1}
+            onClick={addCategory}
+            sx={{
+                cursor: 'pointer'
+            }}
         >
+            {clicked && <ClearIcon />}
             {Icons[categoryData?.category]}
             <Typography
                 fontSize={20}
