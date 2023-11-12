@@ -1,34 +1,10 @@
 import React, { memo, useState } from 'react'
-import { useGetProductQuery, useGetProductsQuery, useUpdateCartMutation } from './productsApiSlice'
-import { store } from '../../app/store'
-import { customersApiSlice } from '../customers/customersApiSlice'
-import ClipLoader from 'react-spinners/ClipLoader'
 import { Icons } from '../../components/ProductIcons'
-import CloseIcon from '@mui/icons-material/Close';
-import { Box, Card, CardActionArea, CardContent, CardMedia, Stack, SvgIcon, Typography } from '@mui/material'
+import { Box, Stack, SvgIcon, Typography } from '@mui/material'
 
-function Product({ userId, product, selectedCategories, setProductClicked }) 
+function Product({ product, setProductClicked }) 
 {
     const [fav, setFav] = useState(false)
-    const [count, setCount] = useState(1)
-
-    const[addToCart, 
-        {
-            isLoading,
-        }] = useUpdateCartMutation()
-
-    async function handleAdd()
-    {
-        try
-        {
-            await addToCart({ id: userId, product: product, action: 'add', count: count }).unwrap()
-            store.dispatch(customersApiSlice.util.invalidateTags([{ type: 'Customer', id: userId }]))
-        }
-        catch(e)
-        {
-            console.error(e)
-        }
-    }
 
     return (
         <Box 
@@ -44,9 +20,7 @@ function Product({ userId, product, selectedCategories, setProductClicked })
                 },
                 position: 'relative',
             }}
-            onClick={() => setProductClicked({
-                id: product.id
-            })}
+            onClick={() => setProductClicked(prev => prev.id !== null ? ({ id: null }) : ({ id: product.id }))}
         >
             <Box
                 flexDirection='row'

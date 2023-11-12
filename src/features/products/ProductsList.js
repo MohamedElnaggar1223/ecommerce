@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useGetProductsQuery } from './productsApiSlice'
+import { useGetProductsQuery, useUpdateCartMutation } from './productsApiSlice'
 import Product from './Product'
 import OutofStockProd from './OutofStockProd'
 import ClipLoader from 'react-spinners/ClipLoader'
 import useAuth from '../../hooks/useAuth'
 import { useGetCategoriesQuery } from '../category/categoryApiSlice'
 import Category from '../category/Category'
-import { Box, Slider, Stack, Typography } from '@mui/material'
+import { Box, Button, Slider, Stack, Typography } from '@mui/material'
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import { store } from '../../app/store'
+import { customersApiSlice } from '../customers/customersApiSlice'
 
 export default function ProductsList() 
 {
@@ -66,8 +70,8 @@ export default function ProductsList()
         }
 
         setMaxPrice(max)
-        setMinPrice(min)
-        setPrice(min)
+        setMinPrice(min !== 99999999999 ? min : 0)
+        setPrice(min !== 99999999999 ? min : 0)
     }, [products])
 
     useEffect(() => 
@@ -79,8 +83,8 @@ export default function ProductsList()
             if(Math.floor(prod.price) < min) min = Math.floor(prod.price)
         })
         
-        setMinPrice(min)
-        if(price < min) setPrice(min)
+        setMinPrice(min !== 99999999999 ? min : 0)
+        if(price < min) setPrice(min !== 99999999999 ? min : 0)
     }, [price, selectedProducts])
 
     useEffect(() => 
@@ -162,9 +166,29 @@ export default function ProductsList()
             if(productClicked.id !== null) 
             {
                 const prod = selectedProducts.find(prod => prod.id === productClicked.id)
-                setViewedProduct(prod)
+                const prodWithCounter = { ...prod, count: 1 }
+                setViewedProduct(prodWithCounter)
             }
         }, [productClicked])
+
+    const[addToCart, 
+        {
+            isLoading: addToCartLoading,
+        }] = useUpdateCartMutation()
+
+    async function handleAdd()
+    {
+        setProductClicked({ id: null })
+        try
+        {
+            await addToCart({ id: userId, product: viewedProduct?.id, action: 'add', count: viewedProduct?.count }).unwrap()
+            store.dispatch(customersApiSlice.util.invalidateTags([{ type: 'Customer', id: userId }]))
+        }
+        catch(e)
+        {
+            console.error(e)
+        }
+    }
 
     let content
     if(isLoading || isLoadingCats) content = <ClipLoader />
@@ -194,6 +218,7 @@ export default function ProductsList()
                 bgcolor='#FBFAF2'
                 display='flex'
                 flexDirection='row'
+                // onClick={() => productClicked.id !== null && setProductClicked({ id: null })}
             >
                 <Box
                     width='fit-content'
@@ -255,24 +280,28 @@ export default function ProductsList()
                     productClicked.id !== null && 
                     <Box
                         position='absolute'
-                        width='50vw'
+                        width={{ xs: '45vw', lg: '50vw'}}
                         borderRadius= '20px'
                         bgcolor= '#FBFCFA'
                         boxShadow='0px 0px 100vw 100vw rgba(175, 175, 175, 0.6)'
                         minHeight='35vh'
-                        top='25%'
+                        top={{ xs: '15%', lg: '25%'}}
                         left='25%'
                         display='flex'
+                        maxHeight={{ xs: 'auto', lg: 'auto'}}
                         padding={1}
-                        paddingLeft={5}
-                        flexWrap='wrap'
+                        paddingLeft={{ xs: 0, lg: 5 }}
+                        flexDirection={{ xs: 'column', lg: 'row'}}
+                        flex={1}
+                        // onClick={() => setProductClicked({ id: viewedProduct?.id })}
                     >
-                        <img style={{ alignSelf: 'center' }} src={viewedProduct?.image} alt='imag' />
+                        <img height={400} style={{ alignSelf: 'center', objectFit: 'contain', marginTop: '2%', marginBottom: '2%' }} src={viewedProduct?.image} alt='imag' />
                         <Stack
                             direction='column'
-                            marginLeft={6}
-                            my={6}
-                            paddingTop={{ xs: '' }}
+                            marginLeft={{ xs: 4, lg: 6}}
+                            marginRight={{ xs: 2, lg: 0}}
+                            marginTop={{ xs: 1.5, lg: 8}}
+                            marginBottom={{ xs: 1.5, lg: 3}}
                         >
                             <Typography
                                 fontSize={34}
@@ -285,7 +314,9 @@ export default function ProductsList()
                                 fontSize={14}
                                 fontWeight={400}
                                 fontFamily='Poppins'
-                                height={320}
+                                height={{ xs: 240, lg: 'auto'}}
+                                overflow='auto'
+                                mb={1}
                             >
                                 {viewedProduct?.description}
                             </Typography>
@@ -297,22 +328,83 @@ export default function ProductsList()
                                 {viewedProduct?.additionalInfo && Object.keys(viewedProduct?.additionalInfo).map(info => (
                                     <Stack
                                         direction='row'
+                                        my='20px'
                                     >
                                         <Typography
                                             fontWeight={600}
                                             fontSize={16}
+                                            fontFamily='Poppins'
                                         >
                                             {info}:
                                         </Typography>
                                         <Typography
                                             fontSize={16}
                                             marginLeft={1}
+                                            fontFamily='Poppins'
                                         >
                                             {viewedProduct?.additionalInfo[info]}
                                         </Typography>
                                     </Stack>
                                 ))}
                             </Typography>
+                            <Stack
+                                height= '60px'
+                                marginRight= {{ xs: 0, lg: 2.5 }}
+                                alignSelf= 'flex-end'
+                                direction='row'
+                            >
+                                <Stack
+                                    direction='column'
+                                    alignItems='center'
+                                    justifyContent='center'
+                                    marginRight={1}
+                                    border={1}
+                                    borderRadius={0.8}
+                                    borderColor='#ebebeb'
+                                    color='#595959'
+                                    boxShadow='0px 0px 4px 1px rgba(0,0,0,0.2)'
+                                    fontSize={18}
+                                >
+                                    <AddIcon onClick={() => setViewedProduct(prev => ({ ...prev, count: prev.count + 1 }))} sx={{ marginTop: 0.5, cursor: 'pointer' }} fontSize='2px' />
+                                    <Box
+                                        bgcolor='#fcfcfc'
+                                        display='flex'
+                                        alignItems='center'
+                                        justifyContent='center'
+                                        borderTop={1}
+                                        borderBottom={1}
+                                        width= '100%'
+                                        borderColor='#ebebeb'
+                                    >
+                                        <Typography
+                                            fontFamily='Poppins'
+                                            fontWeight={500}
+                                        >
+                                            {viewedProduct?.count}
+                                        </Typography>
+                                    </Box>
+                                    <RemoveIcon onClick={() => setViewedProduct(prev => prev.count > 1 ? ({ ...prev, count: prev.count - 1 }) : prev )} sx={{ marginBottom: 0.5, cursor: 'pointer' }} fontSize='2px' />
+                                </Stack>
+                                <Button
+                                    sx={{
+                                        width: '156px',
+                                        height: '52px',
+                                        backgroundColor: '#F8EEEC',
+                                        '&:hover': {
+                                            backgroundColor: '#f5e0dc',
+                                        },
+                                        color: '#000',
+                                        fontSize: 18,
+                                        fontWeight: 600,
+                                        fontFamily: 'Poppins',
+                                        borderRadius: 2.5,
+
+                                    }}
+                                    onClick={handleAdd}
+                                >
+                                    Add To Cart
+                                </Button>
+                            </Stack>
                         </Stack>
                     </Box>
                 }
