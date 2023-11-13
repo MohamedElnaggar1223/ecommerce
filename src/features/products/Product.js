@@ -20,7 +20,11 @@ function Product({ product, setProductClicked })
                 },
                 position: 'relative',
             }}
-            onClick={() => setProductClicked(prev => prev.id !== null ? ({ id: null }) : ({ id: product.id }))}
+            onClick={(e) => {
+                console.log(e.target.classList)
+                if(!e.target.classList.contains('Heart'))
+                setProductClicked(prev => prev.id !== null ? ({ id: null }) : ({ id: product.id }))}
+            }
         >
             <Box
                 flexDirection='row'
@@ -91,9 +95,10 @@ function Product({ product, setProductClicked })
                                     top: '35%',
                                     left: '81%'
                                 }}
+                                className='Heart'
                             >
-                                <svg onClick={() => setFav(prev => !prev)} xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
-                                    <path d="M12 3.31952C8.8512 -2.20127 0 -0.589158 0 6.32741C0 10.8802 5.214 15.7715 11.1636 21.6541C11.3964 21.8851 11.6988 22 12 22C12.3012 22 12.6036 21.8851 12.8364 21.6541C18.8088 15.7495 24 10.8814 24 6.32741C24 -0.61238 15.1248 -2.15972 12 3.31952Z" fill="black" fill-opacity="0.3"/>
+                                <svg className='Heart' onClick={() => setFav(prev => !prev)} xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
+                                    <path className='Heart' d="M12 3.31952C8.8512 -2.20127 0 -0.589158 0 6.32741C0 10.8802 5.214 15.7715 11.1636 21.6541C11.3964 21.8851 11.6988 22 12 22C12.3012 22 12.6036 21.8851 12.8364 21.6541C18.8088 15.7495 24 10.8814 24 6.32741C24 -0.61238 15.1248 -2.15972 12 3.31952Z" fill="black" fill-opacity="0.3"/>
                                 </svg>
                             </SvgIcon>
                         :
@@ -103,9 +108,10 @@ function Product({ product, setProductClicked })
                                     top: '35%',
                                     left: '81%'
                                 }}
+                                className='Heart'
                             >
-                                <svg onClick={() => setFav(prev => !prev)} xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 20.593C6.37 15.054 1 10.296 1 6.191C1 2.4 4.068 1 6.281 1C7.593 1 10.432 1.501 12 5.457C13.59 1.489 16.464 1.01 17.726 1.01C20.266 1.01 23 2.631 23 6.191C23 10.26 17.864 14.816 12 20.593ZM17.726 0.00999999C15.523 0.00999999 13.28 1.052 12 3.248C10.715 1.042 8.478 0 6.281 0C3.098 0 0 2.187 0 6.191C0 10.852 5.571 15.62 12 22C18.43 15.62 24 10.852 24 6.191C24 2.18 20.905 0.00999999 17.726 0.00999999Z" fill="black"/>
+                                <svg className='Heart' onClick={() => setFav(prev => !prev)} xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22" fill="none">
+                                    <path className='Heart'  fill-rule="evenodd" clip-rule="evenodd" d="M12 20.593C6.37 15.054 1 10.296 1 6.191C1 2.4 4.068 1 6.281 1C7.593 1 10.432 1.501 12 5.457C13.59 1.489 16.464 1.01 17.726 1.01C20.266 1.01 23 2.631 23 6.191C23 10.26 17.864 14.816 12 20.593ZM17.726 0.00999999C15.523 0.00999999 13.28 1.052 12 3.248C10.715 1.042 8.478 0 6.281 0C3.098 0 0 2.187 0 6.191C0 10.852 5.571 15.62 12 22C18.43 15.62 24 10.852 24 6.191C24 2.18 20.905 0.00999999 17.726 0.00999999Z" fill="black"/>
                                 </svg>
                             </SvgIcon>
                     }

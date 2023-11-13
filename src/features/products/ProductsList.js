@@ -21,7 +21,7 @@ export default function ProductsList()
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedProducts, setSelectedProducts] = useState([])
     const [productClicked, setProductClicked] = useState({ id: null })
-    const [viewedProduct, setViewedProduct] = useState()
+    const [viewedProduct, setViewedProduct] = useState({})
 
     const [minPrice, setMinPrice] = useState(0)
     const [price, setPrice] = useState(minPrice)
@@ -166,7 +166,10 @@ export default function ProductsList()
             if(productClicked.id !== null) 
             {
                 const prod = selectedProducts.find(prod => prod.id === productClicked.id)
-                const prodWithCounter = { ...prod, count: 1 }
+                const exCount = viewedProduct?.count
+                let prodWithCounter
+                if(exCount && productClicked.id === viewedProduct?.id) prodWithCounter = { ...prod, count: exCount }
+                else prodWithCounter = { ...prod, count: 1 }
                 setViewedProduct(prodWithCounter)
             }
         }, [productClicked])
@@ -218,7 +221,17 @@ export default function ProductsList()
                 bgcolor='#FBFAF2'
                 display='flex'
                 flexDirection='row'
-                // onClick={() => productClicked.id !== null && setProductClicked({ id: null })}
+                onClick={(e) => {
+                    if(!((e.target.classList).contains('ProductBox')) )
+                    {
+                        if((e.target.classList.contains('Heart'))) 
+                        {
+                            setViewedProduct({})
+                            setProductClicked({ id: null })
+                        }
+                        else productClicked.id !== null && setProductClicked({ id: null })
+                    }
+                }}
             >
                 <Box
                     width='fit-content'
@@ -293,20 +306,24 @@ export default function ProductsList()
                         paddingLeft={{ xs: 0, lg: 5 }}
                         flexDirection={{ xs: 'column', lg: 'row'}}
                         flex={1}
-                        // onClick={() => setProductClicked({ id: viewedProduct?.id })}
+                        className='ProductBox'
+                        onClick={() => setProductClicked({ id: viewedProduct?.id })}
+                        
                     >
-                        <img height={400} style={{ alignSelf: 'center', objectFit: 'contain', marginTop: '2%', marginBottom: '2%' }} src={viewedProduct?.image} alt='imag' />
+                        <img className='ProductBox' height={400} style={{ alignSelf: 'center', objectFit: 'contain', marginTop: '2%', marginBottom: '2%' }} src={viewedProduct?.image} alt='imag' />
                         <Stack
                             direction='column'
                             marginLeft={{ xs: 4, lg: 6}}
                             marginRight={{ xs: 2, lg: 0}}
                             marginTop={{ xs: 1.5, lg: 8}}
                             marginBottom={{ xs: 1.5, lg: 3}}
+                            className='ProductBox'
                         >
                             <Typography
                                 fontSize={34}
                                 fontWeight={600}
                                 fontFamily='Poppins'
+                                className='ProductBox'
                             >
                                 {viewedProduct?.title}
                             </Typography>
@@ -316,6 +333,7 @@ export default function ProductsList()
                                 fontFamily='Poppins'
                                 height={{ xs: 240, lg: 'auto'}}
                                 overflow='auto'
+                                className='ProductBox'
                                 mb={1}
                             >
                                 {viewedProduct?.description}
@@ -324,16 +342,19 @@ export default function ProductsList()
                                 fontSize={14}
                                 fontWeight={400}
                                 fontFamily='Poppins'
+                                className='ProductBox'
                             >
                                 {viewedProduct?.additionalInfo && Object.keys(viewedProduct?.additionalInfo).map(info => (
                                     <Stack
                                         direction='row'
                                         my='20px'
+                                        className='ProductBox'
                                     >
                                         <Typography
                                             fontWeight={600}
                                             fontSize={16}
                                             fontFamily='Poppins'
+                                            className='ProductBox'
                                         >
                                             {info}:
                                         </Typography>
@@ -341,6 +362,7 @@ export default function ProductsList()
                                             fontSize={16}
                                             marginLeft={1}
                                             fontFamily='Poppins'
+                                            className='ProductBox'
                                         >
                                             {viewedProduct?.additionalInfo[info]}
                                         </Typography>
@@ -352,6 +374,7 @@ export default function ProductsList()
                                 marginRight= {{ xs: 0, lg: 2.5 }}
                                 alignSelf= 'flex-end'
                                 direction='row'
+                                className='ProductBox'
                             >
                                 <Stack
                                     direction='column'
@@ -360,12 +383,13 @@ export default function ProductsList()
                                     marginRight={1}
                                     border={1}
                                     borderRadius={0.8}
+                                    className='ProductBox'
                                     borderColor='#ebebeb'
                                     color='#595959'
                                     boxShadow='0px 0px 4px 1px rgba(0,0,0,0.2)'
                                     fontSize={18}
                                 >
-                                    <AddIcon onClick={() => setViewedProduct(prev => ({ ...prev, count: prev.count + 1 }))} sx={{ marginTop: 0.5, cursor: 'pointer' }} fontSize='2px' />
+                                    <AddIcon className='ProductBox' onClick={() => setViewedProduct(prev => ({ ...prev, count: prev.count + 1 }))} sx={{ marginTop: 0.5, cursor: 'pointer' }} fontSize='2px' />
                                     <Box
                                         bgcolor='#fcfcfc'
                                         display='flex'
@@ -375,15 +399,17 @@ export default function ProductsList()
                                         borderBottom={1}
                                         width= '100%'
                                         borderColor='#ebebeb'
+                                        className='ProductBox'
                                     >
                                         <Typography
                                             fontFamily='Poppins'
                                             fontWeight={500}
+                                            className='ProductBox'
                                         >
                                             {viewedProduct?.count}
                                         </Typography>
                                     </Box>
-                                    <RemoveIcon onClick={() => setViewedProduct(prev => prev.count > 1 ? ({ ...prev, count: prev.count - 1 }) : prev )} sx={{ marginBottom: 0.5, cursor: 'pointer' }} fontSize='2px' />
+                                    <RemoveIcon className='ProductBox' onClick={() => setViewedProduct(prev => prev.count > 1 ? ({ ...prev, count: prev.count - 1 }) : prev )} sx={{ marginBottom: 0.5, cursor: 'pointer' }} fontSize='2px' />
                                 </Stack>
                                 <Button
                                     sx={{
@@ -401,6 +427,7 @@ export default function ProductsList()
 
                                     }}
                                     onClick={handleAdd}
+                                    className='ProductBox'
                                 >
                                     Add To Cart
                                 </Button>
