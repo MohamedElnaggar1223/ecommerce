@@ -10,12 +10,14 @@ import { Box, Button, Slider, Stack, Typography } from '@mui/material'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { store } from '../../app/store'
-import { customersApiSlice } from '../customers/customersApiSlice'
+import { customersApiSlice, useGetFavsQuery } from '../customers/customersApiSlice'
+import { selectOpen } from '../header/menuSlice'
+import { useSelector } from 'react-redux'
 
 export default function ProductsList() 
 {
     const { id: userId } = useAuth()
-    const [categories, setCategories] = useState(false)
+    const open = useSelector(selectOpen)
     const [showStock, setShowStock] = useState(true)
     const [sort, setSort] = useState('')
     const [selectedCategories, setSelectedCategories] = useState([])
@@ -48,6 +50,17 @@ export default function ProductsList()
         isLoading: isLoadingCats,
         isSuccess: isSuccessCats
     } = useGetCategoriesQuery('categoriesList', 
+    {
+        pollingInterval: 12000000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+        refetchOnReconnect: true
+    })
+
+    const 
+    { 
+        data: favs
+    } = useGetFavsQuery({ id: userId }, 
     {
         pollingInterval: 12000000,
         refetchOnFocus: true,
@@ -92,21 +105,54 @@ export default function ProductsList()
         if(products?.ids && products?.entities)
         {
             const { ids, entities } = products
-
+            console.log(favs)
             if(selectedCategories.length !== 0)
             {
                 //@ts-ignore
                 const array = ids.filter(id => selectedCategories.includes(entities[id].category))
                 const filteredArray = array.map(id => entities[id])
-                setSelectedProducts(filteredArray)
+                setShowStock(true)
+                //@ts-ignore
+                const finalArray = filteredArray.filter(prod => selectedCategories?.includes(prod.category))
+                if(sort === 'Newest') finalArray.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+                else if(sort === 'Oldest') finalArray.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+                else if(sort === 'HighestPrice') finalArray.sort((a, b) => b.price === a.price ? 0 : b.price > a.price ? 1 : -1)
+                else if(sort === 'LowestPrice') finalArray.sort((a, b) => a.price === b.price ? 0 : a.price > b.price ? 1 : -1)
+                else if(sort === 'AtoZ') finalArray.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
+                else if(sort === 'ZtoA') finalArray.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
+                else if(sort === 'InStock') setShowStock(false)
+                else if(sort === 'Favourites') 
+                {
+                    const final = finalArray.filter(prod => favs.includes(prod.id))
+                    setSelectedProducts(final)
+                    return
+                }
+                //@ts-ignore
+                setSelectedProducts(finalArray)
             }
             else
             {
                 const array = ids?.map(id => entities[id])
+                setShowStock(true)
+                //@ts-ignore
+                if(sort === 'Newest') array.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+                else if(sort === 'Oldest') array.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+                else if(sort === 'HighestPrice') array.sort((a, b) => b.price === a.price ? 0 : b.price > a.price ? 1 : -1)
+                else if(sort === 'LowestPrice') array.sort((a, b) => a.price === b.price ? 0 : a.price > b.price ? 1 : -1)
+                else if(sort === 'AtoZ') array.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
+                else if(sort === 'ZtoA') array.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
+                else if(sort === 'InStock') setShowStock(false)
+                else if(sort === 'Favourites') 
+                {
+                    const final = array.filter(prod => favs.includes(prod.id))
+                    setSelectedProducts(final)
+                    return
+                }
+                //@ts-ignore
                 setSelectedProducts(array)
             }
         }
-        
+        //eslint-disable-next-line
     }, [selectedCategories, products])
 
     const handlePriceChange = useCallback(() =>
@@ -115,6 +161,7 @@ export default function ProductsList()
         const prods = ids.map(id => entities[id])
         const array = [...prods]
         const filteredArray = array.filter(prod => parseInt(prod.price) <= price)
+        console.log(favs)
         if(selectedCategories.length !== 0)
         {
             setShowStock(true)
@@ -127,6 +174,12 @@ export default function ProductsList()
             else if(sort === 'AtoZ') finalArray.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
             else if(sort === 'ZtoA') finalArray.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
             else if(sort === 'InStock') setShowStock(false)
+            else if(sort === 'Favourites') 
+            {
+                const final = finalArray.filter(prod => favs.includes(prod.id))
+                setSelectedProducts(final)
+                return
+            }
             //@ts-ignore
             setSelectedProducts(finalArray)
         }
@@ -140,16 +193,25 @@ export default function ProductsList()
             else if(sort === 'AtoZ') filteredArray.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
             else if(sort === 'ZtoA') filteredArray.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
             else if(sort === 'InStock') setShowStock(false)
+            else if(sort === 'Favourites') 
+            {
+                const final = filteredArray.filter(prod => favs.includes(prod.id))
+                setSelectedProducts(final)
+                return
+            }
             //@ts-ignore
             setSelectedProducts(filteredArray)
         }
-    }, [price, products, selectedCategories, sort])
+    }, [price, products, selectedCategories, sort, favs])
 
     function handleSort(e)
     {
         setSort(e.target.value)
         setShowStock(true)
-        const array = [...selectedProducts]
+        console.log(favs)
+        const { ids, entities } = products
+        const prods = ids.map(id => entities[id])
+        const array = [...prods]
         if(e.target.value === 'Newest') array.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         else if(e.target.value === 'Oldest') array.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
         else if(e.target.value === 'HighestPrice') array.sort((a, b) => b.price === a.price ? 0 : b.price > a.price ? 1 : -1)
@@ -157,22 +219,29 @@ export default function ProductsList()
         else if(e.target.value === 'AtoZ') array.sort((a, b) => a.title === b.title ? 0 : a.title > b.title ? 1 : -1)
         else if(e.target.value === 'ZtoA') array.sort((a, b) => b.title === a.title ? 0 : b.title > a.title ? 1 : -1)
         else if(e.target.value === 'InStock') setShowStock(false)
+        else if(e.target.value === 'Favourites') 
+        {
+            const final = array.filter(prod => favs.includes(prod.id))
+            setSelectedProducts(final)
+            return
+        }
         //@ts-ignore
         setSelectedProducts(array)
     }
 
     useEffect(() => 
+    {
+        if(productClicked.id !== null) 
         {
-            if(productClicked.id !== null) 
-            {
-                const prod = selectedProducts.find(prod => prod.id === productClicked.id)
-                const exCount = viewedProduct?.count
-                let prodWithCounter
-                if(exCount && productClicked.id === viewedProduct?.id) prodWithCounter = { ...prod, count: exCount }
-                else prodWithCounter = { ...prod, count: 1 }
-                setViewedProduct(prodWithCounter)
-            }
-        }, [productClicked])
+            const prod = selectedProducts.find(prod => prod.id === productClicked.id)
+            const exCount = viewedProduct?.count
+            let prodWithCounter
+            if(exCount && productClicked.id === viewedProduct?.id) prodWithCounter = { ...prod, count: exCount }
+            else prodWithCounter = { ...prod, count: 1 }
+            setViewedProduct(prodWithCounter)
+        }
+        //eslint-disable-next-line
+    }, [productClicked])
 
     const[addToCart, 
         {
@@ -205,7 +274,7 @@ export default function ProductsList()
             prod.available 
             ?
                 //@ts-ignore
-                <Product key={prod._id} setProductClicked={setProductClicked} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
+                <Product key={prod._id} favs={favs} setProductClicked={setProductClicked} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
             :
                 //@ts-ignore
                 showStock && <OutofStockProd key={prod._id} selectedCategories={selectedCategories} userId={userId} product={entities[prod._id]} />
@@ -229,19 +298,26 @@ export default function ProductsList()
                             setViewedProduct({})
                             setProductClicked({ id: null })
                         }
-                        else productClicked.id !== null && setProductClicked({ id: null })
+                        else if((e.target.classList).length !== 0) productClicked.id !== null && setProductClicked({ id: null })
                     }
                 }}
             >
                 <Box
-                    width='fit-content'
+                    width={{ xs: open ? '250px' : '0px' , sm: 'fit-content', lg: 'fit-content' }}
                     bgcolor='#F8EEEC'
                     height='100%'
                     display='flex'
                     flexDirection='column'
-                    padding={3}
+                    padding={{xs: open ? 2 : 0 , sm: 3, lg: 3}}
                     justifyContent='space-evenly'
-                    gap={4}
+                    gap={{xs: open ? 2 : 0, sm: 4, lg: 4}}
+                    zIndex={{ xs: 999, sm: 0, lg: 0 }}
+                    position={{ xs: 'absolute', sm: 'relative', lg: 'relative' }}
+                    boxShadow={{ xs: open ? '200px 0px 44px 100vw rgba(0,0,0,0.25)' : '0', sm: '0', lg: '0' }}
+                    overflow={{ xs: open ? 'visible' : 'hidden', sm: 'visible', lg: 'visible' }}
+                    sx={{
+                        transition: '1s all',
+                    }}
                 >
                     <Stack
                         direction='column'
@@ -278,6 +354,27 @@ export default function ProductsList()
                     height='auto'
                     paddingBottom={14}
                 >
+                    <Box
+                        pl={{xs: 2, sm: 8, lg: 8}}
+                        pt={{xs: 5, sm: 4, lg: 4}}
+                        fontFamily='Poppins'
+                    >
+                        <label style={{ fontSize: 20 }} htmlFor='Sort'>Sort By:</label>
+                        <select
+                            onChange={handleSort}
+                            // defaultValue='Newest'
+                            style={{ fontFamily: 'Poppins', fontSize: 20, backgroundColor: '#fff', borderRadius: '10px', height: 'auto', padding: 5, marginLeft: '10px', border: '1px solid #000', outline: 'none' }}
+                            >
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='Newest'>Newest</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='Oldest'>Oldest</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='HighestPrice'>Highest Price</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='LowestPrice'>Lowest Price</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='AtoZ'>A ~ Z</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='ZtoA'>Z ~ A</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='InStock'>In Stock</option>
+                                <option style={{ fontFamily: 'Poppins', paddingRight: 6, fontSize: 20, fontWeight: 500 }} className='SortChild' value='Favourites'>Favourites</option>
+                        </select>
+                    </Box>
                     <Stack
                         direction='row'
                         flexWrap='wrap'
@@ -293,31 +390,37 @@ export default function ProductsList()
                     productClicked.id !== null && 
                     <Box
                         position='absolute'
-                        width={{ xs: '45vw', lg: '50vw'}}
+                        width={{ xs: '80vw', sm: '45vw', lg: '50vw'}}
                         borderRadius= '20px'
                         bgcolor= '#FBFCFA'
                         boxShadow='0px 0px 100vw 100vw rgba(175, 175, 175, 0.6)'
                         minHeight='35vh'
-                        top={{ xs: '15%', lg: '25%'}}
-                        left='25%'
+                        top={{ xs: '15%', sm: '20%', lg: '20%'}}
+                        left={{ xs: '10%', sm: '25%', lg: '25%'}}
                         display='flex'
                         maxHeight={{ xs: 'auto', lg: 'auto'}}
                         padding={1}
-                        paddingLeft={{ xs: 0, lg: 5 }}
+                        paddingLeft={{ xs: 0, lg: 1 }}
                         flexDirection={{ xs: 'column', lg: 'row'}}
                         flex={1}
                         className='ProductBox'
                         onClick={() => setProductClicked({ id: viewedProduct?.id })}
-                        
+                        zIndex={999}
                     >
-                        <img className='ProductBox' height={400} style={{ alignSelf: 'center', objectFit: 'contain', marginTop: '2%', marginBottom: '2%' }} src={viewedProduct?.image} alt='imag' />
+                        <Box
+                            sx={{ display: 'flex', flex: '1 1 0', alignSelf: 'center', marginTop: '2%', marginBottom: '2%' }}
+                            height={{ xs: 280, sm: 240, lg: 520 }}
+                        >
+                            <img className='ProductBox' style={{ height: '100%', maxWidth: '100%' , flex: '1 1 0', alignSelf: 'center', objectFit: 'contain'}} src={viewedProduct?.image} alt='imag' />
+                        </Box>
                         <Stack
                             direction='column'
                             marginLeft={{ xs: 4, lg: 6}}
-                            marginRight={{ xs: 2, lg: 0}}
+                            marginRight={{ xs: 2, lg: '2%'}}
                             marginTop={{ xs: 1.5, lg: 8}}
                             marginBottom={{ xs: 1.5, lg: 3}}
                             className='ProductBox'
+                            flex={1}
                         >
                             <Typography
                                 fontSize={34}
@@ -331,7 +434,8 @@ export default function ProductsList()
                                 fontSize={14}
                                 fontWeight={400}
                                 fontFamily='Poppins'
-                                height={{ xs: 240, lg: 'auto'}}
+                                height={{ xs: 'auto', lg: 'auto'}}
+                                maxHeight={{ xs: 120, sm: 'fit-content', lg: 'fit-content' }}
                                 overflow='auto'
                                 className='ProductBox'
                                 mb={1}
@@ -373,6 +477,7 @@ export default function ProductsList()
                                 height= '60px'
                                 marginRight= {{ xs: 0, lg: 2.5 }}
                                 alignSelf= 'flex-end'
+                                mt= 'auto'
                                 direction='row'
                                 className='ProductBox'
                             >
@@ -428,6 +533,7 @@ export default function ProductsList()
                                     }}
                                     onClick={handleAdd}
                                     className='ProductBox'
+                                    disabled={addToCartLoading}
                                 >
                                     Add To Cart
                                 </Button>

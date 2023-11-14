@@ -92,6 +92,25 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                             method: 'GET'
                         }),
                         invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }, { type: 'Order', id: 'LIST' }]
+                    }),
+                getFavs: builder.query(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/customers/favs/${id}`,
+                            method: 'GET'
+                        }),
+                        providesTags: (result, error, arg) => [{ type: 'Customer', id: arg.id }]
+                    }),
+                updateFavs: builder.mutation(
+                    {
+                        query: (updatedFavs) => 
+                        ({
+                            url: `customers/favs`,
+                            method: 'PATCH',
+                            body: {...updatedFavs}
+                        }),
+                        invalidatesTags: (result, err, args) => [{ type: 'Customer', id: args.id }]
                     })
             })
     })
@@ -103,5 +122,7 @@ export const
     useAddCustomerMutation,
     useUpdateCartMutation,
     useChechOutMutation,
-    useOrderCompletedMutation
+    useOrderCompletedMutation,
+    useGetFavsQuery,
+    useUpdateFavsMutation
 } = customersApiSlice

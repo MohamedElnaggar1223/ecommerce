@@ -1,22 +1,42 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import useAuth from '../hooks/useAuth'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { useChechOutMutation, useGetCustomerQuery } from '../features/customers/customersApiSlice'
 import CartItem from '../features/products/CartItem'
-import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { motion, AnimatePresence } from 'framer-motion'
+import MenuIcon from '@mui/icons-material/Menu';
+import { Box, Button, Stack, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectOpen, setOpen } from '../features/header/menuSlice'
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useSendLogoutMutation } from '../features/auth/authApiSlice'
+import { useNavigate } from 'react-router-dom'
 
 export default function Header() 
 {
     const { id, username, admin, delivery } = useAuth() 
     const [cartHovered, setCartHovered] = useState(false)
-    const [animationParent] = useAutoAnimate()
+    const [nameHovered, setNameHovered] = useState(false)
+    const open = useSelector(selectOpen)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    
+    useEffect(() => {
+        console.log(open)
+    }, [open])
 
     const [checkout, 
         {
+            //eslint-disable-next-line
             isSuccess
         }] = useChechOutMutation()
+
+    const [logout] = useSendLogoutMutation()
+
+    async function sendLogout()
+    {
+        await logout({})
+        navigate('/login')
+    }
 
     const
     {
@@ -51,26 +71,132 @@ export default function Header()
     const cartItems = userData?.cart?.items.map(item => <CartItem key={item.product} product={item} />)
 
     const cartTotal = (
-        <div className='CartItem'>
-            <div className='CartTotal'>Total: ${userData?.cart?.total.toFixed(2)}</div>
-            <div className='CartCheckOut'>
-                <button 
-                    className='CheckOutButton'
-                    onClick={onCheckOut}
-                >
-                        Check Out
-                </button>
-            </div>
-        </div>
+        <Box
+            display='flex'
+            flexDirection='row'
+            justifyContent='space-between'
+            alignItems='center'
+            padding={1}
+        >
+            <Typography
+                fontWeight={500}
+                fontFamily='Poppins'
+                fontSize={18}
+            >
+                Total: ${userData?.cart?.total.toFixed(2)}
+            </Typography>
+            <Button
+                sx={{
+                    backgroundColor: '#000',
+                    borderRadius: 1.5,
+                    color: '#fcfcfc',
+                    width: 150,
+                    fontFamily: 'Poppins',
+                    '&:hover': {
+                        backgroundColor: '#494949'
+                    }
+                }}
+                onClick={onCheckOut}
+            >
+                Check Out
+            </Button>
+        </Box>
     )
 
     return (
         <header>
-            <div className='HeaderTitle'>
-                <h1>NJ Shop</h1>
-            </div>
+            <Box
+                display='flex'
+                flexDirection='row'
+                alignItems='center'
+                ml={{xs: 1, sm: 4, lg: 4}}
+            >
+                <MenuIcon onClick={() => dispatch(setOpen({ open: !open }))} sx={{ width: {xs: 'auto', sm: '0px', lg: '0px'}, color: '#fff', marginRight: '5px' }} />
+                <Typography
+                    fontSize={{xs: 32, sm: 36, lg: 36}}
+                    color='#fcfcfc'
+                    fontFamily='Poppins'
+                >
+                    NJ Shop
+                </Typography>
+            </Box>
             <div className='HeaderButtons'>
-                {username && <div className='HeadersName'>Hello, {username}!</div>}
+                {
+                    username && 
+                    <div 
+                        onMouseEnter={() => setNameHovered(prev => !prev)} 
+                        onMouseLeave={() => setNameHovered(prev => !prev)}  
+                        className='HeadersName'
+                        style={{
+                            position: 'relative',
+                            cursor: 'pointer'
+                        }}
+                    >
+                            Hello, {username}!
+                            <AnimatePresence>
+                            {
+                                nameHovered && 
+                                <motion.div 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        position: 'absolute',
+                                        zIndex: 1,
+                                        right: '0%',
+                                        backgroundColor: 'whitesmoke',
+                                        boxShadow: '0px 2px 8px 2px rgba(0, 0, 0, 0.45)',
+                                        borderRadius: '1rem',
+                                        marginTop: '5%',
+                                        overflow: 'hidden',
+                                        color: '#000',
+                                    }}
+                                >
+                                    <Stack
+                                        width={120}
+                                        height={100}
+                                        direction='column'
+                                        justifyContent='space-around'
+                                        alignItems='flex-start'
+                                        padding={1}
+                                        pl={2}
+                                    >
+                                        <Typography
+                                            height={50}
+                                            display='flex'
+                                            flex={1}
+                                            textAlign='left'
+                                            alignItems='center'
+                                            fontSize={18}
+                                            fontFamily='Poppins'
+                                            // fontWeight={500}
+                                            borderBottom={1}
+                                            width='100%'
+                                        >
+                                            My Orders
+                                        </Typography>
+                                        <Typography 
+                                            height={50}
+                                            display='flex'
+                                            flex={1}
+                                            textAlign='left'
+                                            alignItems='center'
+                                            fontSize={18}
+                                            fontFamily='Poppins'
+                                            fontWeight={500}
+                                            gap={0.5}
+                                            onClick={sendLogout}
+                                        >
+                                            <LogoutIcon />Logout
+                                        </Typography>
+                                    </Stack>
+                                </motion.div>
+                            }
+                            </AnimatePresence>
+                    </div>
+                }
                 {!admin && !delivery && 
                     <div 
                         className='Cart' 
@@ -87,11 +213,30 @@ export default function Header()
                                 <motion.div 
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }} 
-                                    className='CartItems'
+                                    exit={{ opacity: 0 }}
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        position: 'absolute',
+                                        zIndex: 1,
+                                        right: '0%',
+                                        backgroundColor: 'whitesmoke',
+                                        boxShadow: '0px 2px 8px 2px rgba(0, 0, 0, 0.45)',
+                                        borderRadius: '1rem',
+                                        marginTop: '5%',
+                                        overflow: 'hidden',
+                                    }}
                                 >
-                                    {cartItems}
-                                    {cartTotal}
+                                    <Box
+                                        width={{xs: 330, sm: 420, lg: 420}}
+                                        display='flex'
+                                        flexDirection='column'
+                                        padding={2}
+                                        gap={2}
+                                    >
+                                        {cartItems}
+                                        {cartTotal}
+                                    </Box>
                                 </motion.div>
                             }
                         </AnimatePresence>
