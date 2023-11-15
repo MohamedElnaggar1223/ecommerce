@@ -128,7 +128,10 @@ export default function Header()
                             cursor: 'pointer'
                         }}
                     >
-                            Hello, {username}!
+                            <Stack gap={0.5} direction={{ xs: 'column', sm: 'row', lg: 'row' }} > 
+                                <Typography fontSize={18} fontFamily='Poppins'>Hello, </Typography>
+                                <Typography fontSize={18} fontFamily='Poppins'>{username}!</Typography>
+                            </Stack>
                             <AnimatePresence>
                             {
                                 nameHovered && 
