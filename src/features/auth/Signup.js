@@ -177,7 +177,7 @@ export default function CustomerLogin()
                                 color: '#fcfcfc'
                             }}
                         >
-                            Username:
+                            Email:
                         </FormHelperText>
                         <Input
                             type='email'
