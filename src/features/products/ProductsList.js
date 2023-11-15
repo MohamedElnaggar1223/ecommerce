@@ -408,7 +408,7 @@ export default function ProductsList()
                         top={{ xs: '15%', sm: '20%', lg: '20%'}}
                         left={{ xs: '10%', sm: '25%', lg: '25%'}}
                         display='flex'
-                        maxHeight={{ xs: 'auto', lg: 'auto'}}
+                        maxHeight={{ xs: '80vh', lg: 'auto'}}
                         padding={1}
                         paddingLeft={{ xs: 0, lg: 1 }}
                         flexDirection={{ xs: 'column', lg: 'row'}}
