@@ -34,6 +34,7 @@ function Product({ product, setProductClicked, favs })
                 position: 'relative',
             }}
             onClick={(e) => {
+                //@ts-ignore
                 if(!e.target.classList.contains('Heart'))
                 setProductClicked(prev => prev.id !== null ? ({ id: null }) : ({ id: product.id }))}
             }

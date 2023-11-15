@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import { useChechOutMutation, useGetCustomerQuery } from '../features/customers/customersApiSlice'
 import CartItem from '../features/products/CartItem'
@@ -19,10 +19,6 @@ export default function Header()
     const open = useSelector(selectOpen)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    
-    useEffect(() => {
-        console.log(open)
-    }, [open])
 
     const [checkout, 
         {
@@ -44,11 +40,11 @@ export default function Header()
         isLoading,
     } = useGetCustomerQuery({ id })
 
-    if(isLoading) return <p>Loading...</p>
+    if(isLoading) return <></>
 
     async function handleCartClicked()
     {
-        console.log('cart clicked')
+        // console.log('cart clicked')
     }
 
     async function onCheckOut()
@@ -174,6 +170,7 @@ export default function Header()
                                             // fontWeight={500}
                                             borderBottom={1}
                                             width='100%'
+                                            onClick={() => navigate('/my-orders')}
                                         >
                                             My Orders
                                         </Typography>

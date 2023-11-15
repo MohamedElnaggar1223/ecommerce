@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useGetProductsQuery, useUpdateCartMutation } from './productsApiSlice'
 import Product from './Product'
 import OutofStockProd from './OutofStockProd'
-import ClipLoader from 'react-spinners/ClipLoader'
 import useAuth from '../../hooks/useAuth'
 import { useGetCategoriesQuery } from '../category/categoryApiSlice'
 import Category from '../category/Category'
@@ -13,6 +12,7 @@ import { store } from '../../app/store'
 import { customersApiSlice, useGetFavsQuery } from '../customers/customersApiSlice'
 import { selectOpen } from '../header/menuSlice'
 import { useSelector } from 'react-redux'
+import Loading from '../../components/Loading'
 
 export default function ProductsList() 
 {
@@ -105,7 +105,6 @@ export default function ProductsList()
         if(products?.ids && products?.entities)
         {
             const { ids, entities } = products
-            console.log(favs)
             if(selectedCategories.length !== 0)
             {
                 //@ts-ignore
@@ -161,7 +160,6 @@ export default function ProductsList()
         const prods = ids.map(id => entities[id])
         const array = [...prods]
         const filteredArray = array.filter(prod => parseInt(prod.price) <= price)
-        console.log(favs)
         if(selectedCategories.length !== 0)
         {
             setShowStock(true)
@@ -177,6 +175,7 @@ export default function ProductsList()
             else if(sort === 'Favourites') 
             {
                 const final = finalArray.filter(prod => favs?.includes(prod.id))
+                //@ts-ignore
                 setSelectedProducts(final)
                 return
             }
@@ -196,6 +195,7 @@ export default function ProductsList()
             else if(sort === 'Favourites') 
             {
                 const final = filteredArray.filter(prod => favs?.includes(prod.id))
+                //@ts-ignore
                 setSelectedProducts(final)
                 return
             }
@@ -208,7 +208,6 @@ export default function ProductsList()
     {
         setSort(e.target.value)
         setShowStock(true)
-        console.log(favs)
         const { ids, entities } = products
         const prods = ids.map(id => entities[id])
         const array = [...prods]
@@ -222,6 +221,7 @@ export default function ProductsList()
         else if(e.target.value === 'Favourites') 
         {
             const final = array.filter(prod => favs?.includes(prod.id))
+            //@ts-ignore
             setSelectedProducts(final)
             return
         }
@@ -233,10 +233,14 @@ export default function ProductsList()
     {
         if(productClicked.id !== null) 
         {
+            //@ts-ignore
             const prod = selectedProducts.find(prod => prod.id === productClicked.id)
+            //@ts-ignore
             const exCount = viewedProduct?.count
             let prodWithCounter
+            //@ts-ignore
             if(exCount && productClicked.id === viewedProduct?.id) prodWithCounter = { ...prod, count: exCount }
+            //@ts-ignore
             else prodWithCounter = { ...prod, count: 1 }
             setViewedProduct(prodWithCounter)
         }
@@ -253,17 +257,20 @@ export default function ProductsList()
         setProductClicked({ id: null })
         try
         {
+            //@ts-ignore
             await addToCart({ id: userId, product: viewedProduct?.id, action: 'add', count: viewedProduct?.count }).unwrap()
             store.dispatch(customersApiSlice.util.invalidateTags([{ type: 'Customer', id: userId }]))
         }
         catch(e)
         {
-            console.error(e)
+            // console.error(e)
         }
     }
 
     let content
-    if(isLoading || isLoadingCats) content = <ClipLoader />
+    if(isLoading || isLoadingCats) content = (
+        <Loading />
+    )
     else if(isSuccess && isSuccessCats)
     {
         const { entities } = products
@@ -291,13 +298,16 @@ export default function ProductsList()
                 display='flex'
                 flexDirection='row'
                 onClick={(e) => {
+                    //@ts-ignore
                     if(!((e.target.classList).contains('ProductBox')) )
                     {
+                        //@ts-ignore
                         if((e.target.classList.contains('Heart'))) 
                         {
                             setViewedProduct({})
                             setProductClicked({ id: null })
                         }
+                        //@ts-ignore
                         else if((e.target.classList).length !== 0) productClicked.id !== null && setProductClicked({ id: null })
                     }
                 }}
@@ -404,6 +414,7 @@ export default function ProductsList()
                         flexDirection={{ xs: 'column', lg: 'row'}}
                         flex={1}
                         className='ProductBox'
+                        //@ts-ignore
                         onClick={() => setProductClicked({ id: viewedProduct?.id })}
                         zIndex={999}
                     >
@@ -411,6 +422,7 @@ export default function ProductsList()
                             sx={{ display: 'flex', flex: '1 1 0', alignSelf: 'center', marginTop: '2%', marginBottom: '2%' }}
                             height={{ xs: 280, sm: 240, lg: 520 }}
                         >
+                            {/*@ts-ignore */}
                             <img className='ProductBox' style={{ height: '100%', maxWidth: '100%' , flex: '1 1 0', alignSelf: 'center', objectFit: 'contain'}} src={viewedProduct?.image} alt='imag' />
                         </Box>
                         <Stack
@@ -428,6 +440,7 @@ export default function ProductsList()
                                 fontFamily='Poppins'
                                 className='ProductBox'
                             >
+                                {/*//@ts-ignore*/}
                                 {viewedProduct?.title}
                             </Typography>
                             <Typography
@@ -440,6 +453,7 @@ export default function ProductsList()
                                 className='ProductBox'
                                 mb={1}
                             >
+                                {/*//@ts-ignore*/}
                                 {viewedProduct?.description}
                             </Typography>
                             <Typography
@@ -448,6 +462,7 @@ export default function ProductsList()
                                 fontFamily='Poppins'
                                 className='ProductBox'
                             >
+                                {/*//@ts-ignore*/}
                                 {viewedProduct?.additionalInfo && Object.keys(viewedProduct?.additionalInfo).map(info => (
                                     <Stack
                                         direction='row'
@@ -468,6 +483,7 @@ export default function ProductsList()
                                             fontFamily='Poppins'
                                             className='ProductBox'
                                         >
+                                            {/*//@ts-ignore*/}
                                             {viewedProduct?.additionalInfo[info]}
                                         </Typography>
                                     </Stack>
@@ -494,6 +510,7 @@ export default function ProductsList()
                                     boxShadow='0px 0px 4px 1px rgba(0,0,0,0.2)'
                                     fontSize={18}
                                 >
+                                    {/*@ts-ignore */}
                                     <AddIcon className='ProductBox' onClick={() => setViewedProduct(prev => ({ ...prev, count: prev.count + 1 }))} sx={{ marginTop: 0.5, cursor: 'pointer' }} fontSize='2px' />
                                     <Box
                                         bgcolor='#fcfcfc'
@@ -511,9 +528,11 @@ export default function ProductsList()
                                             fontWeight={500}
                                             className='ProductBox'
                                         >
+                                            {/*//@ts-ignore*/}
                                             {viewedProduct?.count}
                                         </Typography>
                                     </Box>
+                                    {/*@ts-ignore */}
                                     <RemoveIcon className='ProductBox' onClick={() => setViewedProduct(prev => prev.count > 1 ? ({ ...prev, count: prev.count - 1 }) : prev )} sx={{ marginBottom: 0.5, cursor: 'pointer' }} fontSize='2px' />
                                 </Stack>
                                 <Button

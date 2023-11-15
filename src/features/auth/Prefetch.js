@@ -27,6 +27,7 @@ export default function Prefetch()
         {
             store.dispatch(customersApiSlice.util.prefetch('getCustomer', { id }, { force: true }))
             store.dispatch(customersApiSlice.util.prefetch('getFavs', { id }, { force: true }))
+            store.dispatch(ordersApiSlice.util.prefetch('getMyOrders', { id }, { force: true }))
         }
         store.dispatch(productsApiSlice.util.prefetch('getProducts', 'productsList', { force: true }))
     }, [id, admin, delivery])

@@ -77,8 +77,6 @@ export default function CustomerLogin()
         }
     }
 
-    console.log(err?.props?.children)
-
     return (
         <Box
             display='flex'

@@ -11,6 +11,7 @@ import Prefetch from './features/auth/Prefetch';
 import Signup from './features/auth/Signup';
 import ProductsList from './features/products/ProductsList';
 import OrderCompleted from './features/customers/OrderCompleted';
+import MyOrders from './features/orders/MyOrders';
 
 function App() {
 	return (
@@ -36,6 +37,10 @@ function App() {
 
 						<Route path='success'>
 							<Route index element={<OrderCompleted />} />
+
+						</Route>
+						<Route path='my-orders'>
+							<Route index element={<MyOrders />} />
 
 						</Route>
 					</Route>

@@ -43,11 +43,25 @@ export const ordersApiSlice = apiSlice.injectEndpoints(
                             }
                             else return [{ type: 'Order', id: 'LIST' }]
                         }
+                    }),
+                getMyOrders: builder.query(
+                    {
+                        query: ({ id }) => 
+                        ({
+                            url: `/orders/${id}`,
+                            method: `GET`,
+                            validateStatus: (response, result) => 
+                            {
+                                return response.status === 200 && !result.isError
+                            }
+                        }),
+                        providesTags: (result, err, args) => [{ type: 'Customer', id: args.id }]
                     })
             })
     })
 
 export const
 {
-    useGetOrdersQuery
+    useGetOrdersQuery,
+    useGetMyOrdersQuery
 } = ordersApiSlice

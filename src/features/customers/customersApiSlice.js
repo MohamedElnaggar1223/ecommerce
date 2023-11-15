@@ -98,7 +98,11 @@ export const customersApiSlice = apiSlice.injectEndpoints(
                         query: ({ id }) => 
                         ({
                             url: `/customers/favs/${id}`,
-                            method: 'GET'
+                            method: 'GET',
+                            validateStatus: (response, result) => 
+                            {
+                                return response.status === 200 && !result.isError
+                            }
                         }),
                         providesTags: (result, error, arg) => [{ type: 'Customer', id: arg.id }]
                     }),

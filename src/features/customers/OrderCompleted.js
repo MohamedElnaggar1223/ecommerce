@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useOrderCompletedMutation } from './customersApiSlice'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
+import Loading from '../../components/Loading'
 
 export default function OrderCompleted() 
 {
@@ -38,7 +39,9 @@ export default function OrderCompleted()
         if(isSuccess) navigate('/products')
     }, [isSuccess, navigate])
     
-    if(isLoading) return <p>Loading</p>
+    if(isLoading) return (
+        <Loading />
+    )
     return (
         <div>Your Order Was Completed :{`)`}</div>
     )
