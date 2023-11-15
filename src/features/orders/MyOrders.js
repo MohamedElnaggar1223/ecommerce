@@ -82,7 +82,7 @@ export default function MyOrders()
                     flexDirection='row'
                     width='100%'
                     py={2}
-                    minHeight={30}
+                    minHeight={{xs: 55, sm: 30, lg: 30}}
                     justifyContent='flex-end'
                 >
                     <Button
@@ -98,7 +98,7 @@ export default function MyOrders()
                             fontWeight: 600,
                             fontFamily: 'Poppins',
                             borderRadius: 2.5,
-                            marginRight: 5,
+                            marginRight: {xs: 2, sm: 5, lg: 5},
                             marginBottom: 1
                         }}
                         onClick={() => navigate('/products')}
