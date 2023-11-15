@@ -326,7 +326,7 @@ export default function ProductsList()
                     boxShadow={{ xs: open ? '200px 0px 44px 100vw rgba(0,0,0,0.25)' : '0', sm: '0', lg: '0' }}
                     overflow={{ xs: open ? 'visible' : 'hidden', sm: 'visible', lg: 'visible' }}
                     sx={{
-                        transition: '1s all',
+                        transition: '0.45s all',
                     }}
                 >
                     <Stack
