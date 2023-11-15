@@ -408,7 +408,7 @@ export default function ProductsList()
                         top={{ xs: '15%', sm: '20%', lg: '20%'}}
                         left={{ xs: '10%', sm: '25%', lg: '25%'}}
                         display='flex'
-                        maxHeight={{ xs: '75vh', lg: 'auto'}}
+                        maxHeight={{ xs: '80vh', lg: 'auto'}}
                         padding={1}
                         paddingLeft={{ xs: 0, lg: 1 }}
                         flexDirection={{ xs: 'column', lg: 'row'}}
@@ -420,7 +420,7 @@ export default function ProductsList()
                     >
                         <Box
                             sx={{ display: 'flex', flex: '1 1 0', alignSelf: 'center', marginTop: '2%', marginBottom: '2%' }}
-                            height={{ xs: 280, sm: 240, lg: 520 }}
+                            height={{ xs: 240, sm: 240, lg: 520 }}
                         >
                             {/*@ts-ignore */}
                             <img className='ProductBox' style={{ height: '100%', maxWidth: '100%' , flex: '1 1 0', alignSelf: 'center', objectFit: 'contain'}} src={viewedProduct?.image} alt='imag' />
