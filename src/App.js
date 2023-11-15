@@ -2,7 +2,6 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout';
 import PublicLayout from './components/PublicLayout';
-import Test from './components/Test';
 import CustomerLogin from './features/auth/CustomerLogin';
 import AdminLogin from './features/auth/AdminLogin';
 import DeliveryLogin from './features/auth/DeliveryLogin';
@@ -25,11 +24,6 @@ function App() {
 
 				<Route element={<RenderLogin />}>
 					<Route element={<Prefetch />}>
-						<Route path='test'>
-							<Route index element={<Test />} />
-
-						</Route>
-
 						<Route path='products'>
 							<Route index element={<ProductsList />} />
 

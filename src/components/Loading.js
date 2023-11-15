@@ -12,7 +12,6 @@ export default function Loading(){
             height='100%'
             alignItems='center'
             justifyContent='center'
-            p={5}
             sx={{
                 background: 'radial-gradient(circle, hsla(10, 100%, 90%, 1) 0%, hsla(10, 46%, 95%, 1) 100%)'
             }}

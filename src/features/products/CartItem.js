@@ -7,6 +7,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, Stack, Typography } from '@mui/material'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { ClipLoader } from 'react-spinners'
 
 function CartItem({ product }) 
 {
@@ -22,7 +23,7 @@ function CartItem({ product })
         isLoading: CartLoading,
     }] = useUpdateCartMutation()
         
-    if(isLoading) return <p>Loading...</p>
+    if(isLoading) return <ClipLoader />
 
     let additionalInfo = null
     if(productData?.additionalInfo && Object.keys(productData?.additionalInfo).length !== 0)

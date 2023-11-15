@@ -3,6 +3,7 @@ import { selectCurrentToken } from './authSlice'
 import { useSelector } from 'react-redux'
 import { useRefreshMutation } from './authApiSlice'
 import { Outlet, Link } from 'react-router-dom'
+import Loading from '../../components/Loading'
 
 export default function RenderLogin() 
 {
@@ -46,7 +47,7 @@ export default function RenderLogin()
     }, [])
 
     let content
-    if(isLoading) content = <p>Loading...</p>
+    if(isLoading) content = <Loading />
     //@ts-ignore
     else if(isError) content = <p>{error?.data?.message} <Link to='/login'>Please Log In Again</Link></p>
     else if(token && isUninitialized) content = <Outlet />
