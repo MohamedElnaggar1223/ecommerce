@@ -109,7 +109,7 @@ export default function ProductsList()
             if(selectedCategories.length !== 0)
             {
                 //@ts-ignore
-                const array = ids.filter(id => selectedCategories.includes(entities[id].category))
+                const array = ids.filter(id => selectedCategories?.includes(entities[id].category))
                 const filteredArray = array.map(id => entities[id])
                 setShowStock(true)
                 //@ts-ignore
@@ -123,7 +123,7 @@ export default function ProductsList()
                 else if(sort === 'InStock') setShowStock(false)
                 else if(sort === 'Favourites') 
                 {
-                    const final = finalArray.filter(prod => favs.includes(prod.id))
+                    const final = finalArray.filter(prod => favs?.includes(prod.id))
                     setSelectedProducts(final)
                     return
                 }
@@ -144,7 +144,7 @@ export default function ProductsList()
                 else if(sort === 'InStock') setShowStock(false)
                 else if(sort === 'Favourites') 
                 {
-                    const final = array.filter(prod => favs.includes(prod.id))
+                    const final = array.filter(prod => favs?.includes(prod.id))
                     setSelectedProducts(final)
                     return
                 }
@@ -176,7 +176,7 @@ export default function ProductsList()
             else if(sort === 'InStock') setShowStock(false)
             else if(sort === 'Favourites') 
             {
-                const final = finalArray.filter(prod => favs.includes(prod.id))
+                const final = finalArray.filter(prod => favs?.includes(prod.id))
                 setSelectedProducts(final)
                 return
             }
@@ -195,7 +195,7 @@ export default function ProductsList()
             else if(sort === 'InStock') setShowStock(false)
             else if(sort === 'Favourites') 
             {
-                const final = filteredArray.filter(prod => favs.includes(prod.id))
+                const final = filteredArray.filter(prod => favs?.includes(prod.id))
                 setSelectedProducts(final)
                 return
             }
@@ -221,7 +221,7 @@ export default function ProductsList()
         else if(e.target.value === 'InStock') setShowStock(false)
         else if(e.target.value === 'Favourites') 
         {
-            const final = array.filter(prod => favs.includes(prod.id))
+            const final = array.filter(prod => favs?.includes(prod.id))
             setSelectedProducts(final)
             return
         }
